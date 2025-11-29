@@ -1,6 +1,5 @@
 import { ChevronDown, Menu, X } from "lucide-react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
 
 const solutions = [
   { name: "AV Solutions", href: "/solutions/av-solutions" },
@@ -55,25 +54,103 @@ interface DropdownProps {
 
 const Dropdown = ({ label, items, isOpen, onToggle, columns = 1 }: DropdownProps) => {
   return (
-    <div className="relative group">
+    <div className="relative">
       <button
         onClick={onToggle}
-        className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-foreground hover:text-primary transition-colors"
+        className="flex items-center gap-2 px-4 py-2 text-sm font-semibold text-gray-700 hover:text-gray-500 transition-colors duration-200 group"
       >
-        {label}
-        <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
+        <span>{label}</span>
+        <ChevronDown
+          className={`h-4 w-4 transition-transform duration-200 ${
+            isOpen ? "rotate-180 text-gray-600" : "text-gray-500 group-hover:text-gray-600"
+          }`}
+        />
       </button>
+
       {isOpen && (
-        <div className="absolute left-0 top-full mt-1 bg-card border border-border rounded-lg shadow-xl z-50 animate-slide-down min-w-[220px]">
-          <div className={`p-2 ${columns > 1 ? `grid grid-cols-${columns} gap-1` : ""}`} style={columns > 1 ? { gridTemplateColumns: `repeat(${columns}, minmax(180px, 1fr))` } : {}}>
+<div className="absolute left-0 top-full mt-2 w-[550px] bg-white rounded-xl shadow-2xl border border-gray-200 z-50 animate-fade-in">
+
+          <div className="p-6">
+            <div className="mb-4 pb-3 border-b border-gray-100">
+              <h3 className="text-lg font-bold text-gray-900">{label}</h3>
+              <p className="text-sm text-gray-500 mt-1">Explore our {label.toLowerCase()}</p>
+            </div>
+
+            <div
+              className="grid gap-2"
+              style={{
+                gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
+              }}
+            >
+              {items.map((item) => (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  className="group flex items-start p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200"
+                >
+                  <div className="w-2 h-2 bg-gray-500 rounded-full mt-2 mr-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+                  <span className="text-sm font-medium text-gray-700 group-hover:text-gray-600 transition-colors duration-200">
+                    {item.name}
+                  </span>
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const NavItem = ({ href, children }: { href: string; children: React.ReactNode }) => {
+  return (
+    <a
+      href={href}
+      className="px-4 py-2 text-sm font-semibold text-gray-700 hover:text-gray-600 transition-colors duration-200 relative group"
+    >
+      {children}
+<span className="absolute inset-0 bg-gray-600 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left opacity-20 rounded-md"></span>
+
+    </a>
+  );
+};
+
+const MobileDropdown = ({ label, items, isOpen, onToggle }: {
+  label: string;
+  items: { name: string; href: string }[];
+  isOpen: boolean;
+  onToggle: () => void;
+}) => {
+  return (
+    <div className="border-b border-gray-200">
+      <button
+        className="flex items-center justify-between w-full py-4 px-4 text-left font-semibold text-gray-900 hover:bg-gray-50 transition-colors duration-200"
+        onClick={onToggle}
+      >
+        <span>{label}</span>
+        <ChevronDown
+          className={`h-5 w-5 transition-transform duration-200 ${
+            isOpen ? "rotate-180 text-gray-600" : "text-gray-400"
+          }`}
+        />
+      </button>
+
+      {isOpen && (
+        <div className="bg-gray-50 border-t border-gray-200 animate-slide-down">
+          <div className="py-2 px-6 space-y-1">
             {items.map((item) => (
-              <Link
+              <a
                 key={item.href}
-                to={item.href}
-                className="block px-4 py-2 text-sm text-foreground hover:bg-secondary hover:text-primary rounded-md transition-colors"
+                href={item.href}
+                className="block py-3 px-3 text-sm text-gray-700 hover:text-gray-600 hover:bg-white rounded-lg transition-all duration-200 border-l-2 border-transparent hover:border-gray-500"
+                onClick={() => {
+                  // Close mobile menu when item is clicked
+                  const event = new CustomEvent('closemobilemenu');
+                  window.dispatchEvent(event);
+                }}
               >
                 {item.name}
-              </Link>
+              </a>
             ))}
           </div>
         </div>
@@ -85,6 +162,8 @@ const Dropdown = ({ label, items, isOpen, onToggle, columns = 1 }: DropdownProps
 export const Navbar = () => {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const navRef = useRef<HTMLDivElement>(null);
 
   const handleDropdownToggle = (dropdown: string) => {
     setOpenDropdown(openDropdown === dropdown ? null : dropdown);
@@ -94,133 +173,254 @@ export const Navbar = () => {
     setOpenDropdown(null);
   };
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (navRef.current && !navRef.current.contains(event.target as Node)) {
+        closeDropdowns();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // Close mobile menu when item is clicked
+  useEffect(() => {
+    const handleCloseMobileMenu = () => {
+      setMobileMenuOpen(false);
+      closeDropdowns();
+    };
+
+    window.addEventListener('closemobilemenu', handleCloseMobileMenu as EventListener);
+    return () => {
+      window.removeEventListener('closemobilemenu', handleCloseMobileMenu as EventListener);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [mobileMenuOpen]);
+
   return (
-    <nav className="sticky top-0 z-50 bg-background/95 backdrop-blur-md border-b border-border">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-         <Link
-  to="/"
-  className="flex items-center gap-2"
-  onClick={closeDropdowns}
->
-  <img
-    src="https://sniperindia.com/wp-content/uploads/2025/05/sniper-logo-black-4-scaled.png"
-    alt="Sniper India Logo"
-    className="w-60 h-10 object-contain"
-  />
-
-
-</Link>
-
-
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-1">
-            <Link to="/" className="px-3 py-2 text-sm font-medium text-foreground hover:text-primary transition-colors">
-              Home
-            </Link>
-            <Link to="/about" className="px-3 py-2 text-sm font-medium text-foreground hover:text-primary transition-colors">
-              About Us
-            </Link>
-            <Dropdown
-              label="Solutions"
-              items={solutions}
-              isOpen={openDropdown === "solutions"}
-              onToggle={() => handleDropdownToggle("solutions")}
-              columns={2}
-            />
-            <Dropdown
-              label="Partners"
-              items={partners}
-              isOpen={openDropdown === "partners"}
-              onToggle={() => handleDropdownToggle("partners")}
-              columns={2}
-            />
-            <Dropdown
-              label="Industries"
-              items={industries}
-              isOpen={openDropdown === "industries"}
-              onToggle={() => handleDropdownToggle("industries")}
-            />
-            <Link to="/blog" className="px-3 py-2 text-sm font-medium text-foreground hover:text-primary transition-colors">
-              Blog
-            </Link>
-            <Link to="/contact" className="px-3 py-2 text-sm font-medium text-foreground hover:text-primary transition-colors">
-              Contact
-            </Link>
+    <>
+      {/* Top Bar - Hidden on mobile for better space utilization */}
+      <div className="hidden md:block bg-gray-900 text-white py-2 text-sm">
+        <div className="container mx-auto px-4 flex justify-between items-center">
+          <div className="flex items-center gap-6">
+            <span className="flex items-center gap-2">
+              <span>📞</span>
+              <span>+91 8939301100</span>
+            </span>
+            <span className="flex items-center gap-2">
+              <span>✉️</span>
+              <span>enquiry@sniperindia.com</span>
+            </span>
           </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            className="lg:hidden p-2 text-foreground"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          >
-            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+          <div className="flex items-center gap-4">
+            <span>ISO 9001:2015 Certified</span>
+            <span className="w-1 h-1 bg-gray-400 rounded-full"></span>
+            <span>Trusted IT Partner</span>
+          </div>
         </div>
-
-        {/* Mobile Navigation */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden py-4 border-t border-border animate-slide-down">
-            <div className="flex flex-col gap-2">
-              <Link to="/" className="px-4 py-2 text-foreground hover:bg-secondary rounded-md" onClick={() => setMobileMenuOpen(false)}>
-                Home
-              </Link>
-              <Link to="/about" className="px-4 py-2 text-foreground hover:bg-secondary rounded-md" onClick={() => setMobileMenuOpen(false)}>
-                About Us
-              </Link>
-
-              {/* Mobile Solutions */}
-              <div className="px-4 py-2">
-                <span className="font-semibold text-foreground">Solutions</span>
-                <div className="mt-2 pl-4 flex flex-col gap-1">
-                  {solutions.map((item) => (
-                    <Link key={item.href} to={item.href} className="py-1 text-sm text-muted-foreground hover:text-primary" onClick={() => setMobileMenuOpen(false)}>
-                      {item.name}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-
-              {/* Mobile Partners */}
-              <div className="px-4 py-2">
-                <span className="font-semibold text-foreground">Partners</span>
-                <div className="mt-2 pl-4 flex flex-col gap-1">
-                  {partners.map((item) => (
-                    <Link key={item.href} to={item.href} className="py-1 text-sm text-muted-foreground hover:text-primary" onClick={() => setMobileMenuOpen(false)}>
-                      {item.name}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-
-              {/* Mobile Industries */}
-              <div className="px-4 py-2">
-                <span className="font-semibold text-foreground">Industries</span>
-                <div className="mt-2 pl-4 flex flex-col gap-1">
-                  {industries.map((item) => (
-                    <Link key={item.href} to={item.href} className="py-1 text-sm text-muted-foreground hover:text-primary" onClick={() => setMobileMenuOpen(false)}>
-                      {item.name}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-
-              <Link to="/blog" className="px-4 py-2 text-foreground hover:bg-secondary rounded-md" onClick={() => setMobileMenuOpen(false)}>
-                Blog
-              </Link>
-              <Link to="/contact" className="mx-4 mt-2 btn-primary text-center" onClick={() => setMobileMenuOpen(false)}>
-                Contact
-              </Link>
-            </div>
-          </div>
-        )}
       </div>
 
-      {/* Click outside to close dropdowns */}
-      {openDropdown && (
-        <div className="fixed inset-0 z-40" onClick={closeDropdowns} />
+      {/* Main Navigation */}
+      <nav
+        ref={navRef}
+        className={`sticky top-0 z-50 transition-all duration-300 ${
+          scrolled
+            ? 'bg-white shadow-lg border-b border-gray-200'
+            : 'bg-white border-b border-gray-100'
+        }`}
+      >
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between h-16 md:h-20">
+            {/* Logo */}
+            <a
+              href="/"
+              className="flex items-center gap-3 group flex-shrink-0"
+              onClick={closeDropdowns}
+            >
+              <img
+                src="https://sniperindia.com/wp-content/uploads/2025/05/sniper-logo-black-4-scaled.png"
+                alt="Sniper India Logo"
+                className="h-8 md:h-10 object-contain group-hover:scale-105 transition-transform duration-300"
+              />
+            </a>
+
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center gap-1">
+              <NavItem href="/">Home</NavItem>
+              <NavItem href="/about">About Us</NavItem>
+
+              <Dropdown
+                label="Solutions"
+                items={solutions}
+                isOpen={openDropdown === "solutions"}
+                onToggle={() => handleDropdownToggle("solutions")}
+                columns={3}
+              />
+
+              <Dropdown
+                label="Partners"
+                items={partners}
+                isOpen={openDropdown === "partners"}
+                onToggle={() => handleDropdownToggle("partners")}
+                columns={4}
+              />
+
+              <Dropdown
+                label="Industries"
+                items={industries}
+                isOpen={openDropdown === "industries"}
+                onToggle={() => handleDropdownToggle("industries")}
+                columns={3}
+              />
+
+              <NavItem href="/blog">Blog</NavItem>
+              <NavItem href="/contact">Contact Us</NavItem>
+
+
+
+            </div>
+
+            {/* Mobile Contact Button - Visible on tablet/mobile */}
+            <div className="hidden md:flex lg:hidden items-center">
+              <a
+                href="/contact"
+                className="px-4 py-2 text-sm font-semibold text-white bg-gray-600 hover:bg-gray-700 rounded-lg transition-all duration-200"
+              >
+                Contact
+              </a>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              className="lg:hidden p-2 text-gray-600 hover:text-gray-600 transition-colors rounded-lg hover:bg-gray-100"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <>
+            {/* Backdrop */}
+            <div
+              className="lg:hidden fixed inset-0 bg-black/20 backdrop-blur-sm z-40 top-16"
+              onClick={() => setMobileMenuOpen(false)}
+            />
+
+            {/* Mobile Menu Panel */}
+            <div className="lg:hidden fixed top-16 left-0 right-0 bg-white border-t border-gray-200 z-50 max-h-[calc(100vh-4rem)] overflow-y-auto animate-slide-in-right">
+              <div className="bg-white">
+                {/* Simple Navigation Items */}
+                <a
+                  href="/"
+                  className="block py-4 px-6 text-lg font-semibold text-gray-900 hover:bg-gray-50 hover:text-gray-600 border-b border-gray-200 transition-colors duration-200"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Home
+                </a>
+
+                <a
+                  href="/about"
+                  className="block py-4 px-6 text-lg font-semibold text-gray-900 hover:bg-gray-50 hover:text-gray-600 border-b border-gray-200 transition-colors duration-200"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  About Us
+                </a>
+
+                {/* Mobile Dropdowns */}
+                <MobileDropdown
+                  label="Solutions"
+                  items={solutions}
+                  isOpen={openDropdown === "mobile-solutions"}
+                  onToggle={() => handleDropdownToggle("mobile-solutions")}
+                />
+
+                <MobileDropdown
+                  label="Partners"
+                  items={partners}
+                  isOpen={openDropdown === "mobile-partners"}
+                  onToggle={() => handleDropdownToggle("mobile-partners")}
+                />
+
+                <MobileDropdown
+                  label="Industries"
+                  items={industries}
+                  isOpen={openDropdown === "mobile-industries"}
+                  onToggle={() => handleDropdownToggle("mobile-industries")}
+                />
+
+                <a
+                  href="/blog"
+                  className="block py-4 px-6 text-lg font-semibold text-gray-900 hover:bg-gray-50 hover:text-gray-600 border-b border-gray-200 transition-colors duration-200"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Blog
+                </a>
+
+                {/* Mobile Contact Button */}
+                <div className="p-4 border-t border-gray-200 bg-gray-50">
+                  <a
+                    href="/contact"
+                    className="block w-full py-3 px-4 text-center text-lg font-bold text-white bg-gray-600 hover:bg-gray-700 rounded-lg transition-all duration-200 shadow-md active:scale-95"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Contact Sales
+                  </a>
+
+                  {/* Mobile Contact Info */}
+                  <div className="mt-4 space-y-2 text-sm text-gray-600">
+                    <div className="flex items-center gap-2">
+                      <span>📞</span>
+                      <span>+91 123 456 7890</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span>✉️</span>
+                      <span>info@sniperindia.com</span>
+                    </div>
+                    <div className="pt-2 text-xs text-gray-500">
+                      ISO 9001:2015 Certified • Trusted IT Partner
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+      </nav>
+
+      {/* Dropdown Overlay */}
+      {openDropdown && !openDropdown.startsWith('mobile-') && (
+        <div
+          className="fixed inset-0 bg-black/10 backdrop-blur-sm z-40"
+          onClick={closeDropdowns}
+        />
       )}
-    </nav>
+    </>
   );
 };
