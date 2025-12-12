@@ -1,10 +1,107 @@
 import { Layout } from "@/components/Layout";
-import { ArrowRight, CheckCircle, Clock, Headphones, Lightbulb, Shield, Users, Zap } from "lucide-react";
-import { useState } from "react";
+import { ArrowRight, CheckCircle, Headphones, Lightbulb, Shield, Users } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+
+
+
+// -------------------- CTA SECTION WITH CUSTOM CURSOR --------------------
+const CTASection = () => {
+  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+  const [cursorVisible, setCursorVisible] = useState(false);
+  const [isHoveringButton, setIsHoveringButton] = useState(false);
+  const sectionRef = useRef(null);
+  const buttonRef = useRef(null);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const handleMouseEnter = () => setCursorVisible(true);
+    const handleMouseLeave = () => {
+      setCursorVisible(false);
+      setIsHoveringButton(false);
+    };
+    const handleMouseMove = (e) => setCursorPosition({ x: e.clientX, y: e.clientY });
+
+    section.addEventListener("mouseenter", handleMouseEnter);
+    section.addEventListener("mouseleave", handleMouseLeave);
+    section.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      section.removeEventListener("mouseenter", handleMouseEnter);
+      section.removeEventListener("mouseleave", handleMouseLeave);
+      section.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
+
+  return (
+    <>
+      {/* Custom Cursor */}
+      <div
+        className={`fixed pointer-events-none z-50 flex items-center justify-center rounded-full font-bold text-sm transition-all duration-300 ${
+          cursorVisible ? "opacity-100" : "opacity-0"
+        } ${
+          isHoveringButton
+            ? "w-32 h-32 bg-white text-black"
+            : "w-24 h-24 bg-white text-black"
+        }`}
+        style={{
+          left: `${cursorPosition.x}px`,
+          top: `${cursorPosition.y}px`,
+          transform: `translate(-50%, -50%) ${cursorVisible ? (isHoveringButton ? "scale(1.3)" : "scale(1)") : "scale(0.5)"}`,
+        }}
+      >
+        {isHoveringButton ? "CLICK ME!" : "LET'S GO!"}
+      </div>
+
+      {/* CTA Section */}
+      <section
+        ref={sectionRef}
+        className="bg-black text-white py-20 px-6 rounded-[4rem] mx-6 my-12 cursor-none"
+      >
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="mb-12">
+            <h2 className="text-7xl md:text-8xl font-semibold mb-6 leading-tight">
+             Ready to<br />transform<br />your business?
+            </h2>
+          </div>
+          <Link
+            ref={buttonRef}
+            to="/contact"
+            className="inline-flex items-center px-12 py-4 border-2 border-white rounded-full text-white font-medium text-lg hover:bg-white hover:text-black transition-colors duration-300"
+            onMouseEnter={() => setIsHoveringButton(true)}
+            onMouseLeave={() => setIsHoveringButton(false)}
+          >
+           GET IN TOUCH
+          </Link>
+        </div>
+      </section>
+    </>
+  );
+};
+
+
+
+
 
 const About = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  // Add scroll listener
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Scroll to top function
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const faqs = [
     {
@@ -309,18 +406,18 @@ const About = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="bg-black text-white py-20 px-6 rounded-[4rem] mx-6 my-12">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="mb-12">
-            <h2 className="text-7xl md:text-8xl font-semibold mb-6 leading-tight">
-              Ready to<br />transform<br />your business?
-            </h2>
-          </div>
-          <Link to="/contact" className="inline-flex items-center px-12 py-4 border-2 border-white rounded-full text-white font-medium text-lg hover:bg-white hover:text-black transition-colors duration-300">
-            GET IN TOUCH
-          </Link>
-        </div>
-      </section>
+    <CTASection />
+
+      {/* Scroll to Top Button */}
+      {showScrollTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 w-14 h-14 bg-white border-2 border-gray-900 rounded-full flex items-center justify-center text-gray-900 hover:bg-gray-900 hover:text-white transition-all duration-300 z-50 shadow-lg"
+          aria-label="Scroll to top"
+        >
+          <ArrowRight className="w-6 h-6 -rotate-90" />
+        </button>
+      )}
     </Layout>
   );
 };

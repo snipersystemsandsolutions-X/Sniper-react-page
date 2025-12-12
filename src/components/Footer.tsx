@@ -1,65 +1,86 @@
-import { Mail, MapPin, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const quickLinks = [
+  { name: "Home", href: "/" },
+  { name: "Blog", href: "/blog" },
+  { name: "Contact Us", href: "/contact" },
   { name: "Careers", href: "/careers" },
   { name: "Privacy Policy", href: "/privacy" },
   { name: "Terms of Service", href: "/terms" },
   { name: "Support", href: "/support" },
-  { name: "Blog", href: "/blog" },
-  { name: "Contact", href: "/contact" },
 ];
 
 const solutionsLinks = [
-  { name: "IT Infrastructure", href: "/solutions/it-infrastructure" },
-  { name: "Managed IT Services", href: "/solutions/managed-it-services" },
-  { name: "IT Consulting", href: "/solutions/it-consulting" },
   { name: "AV Solutions", href: "/solutions/av-solutions" },
+  { name: "Device Deployment & MDM", href: "/solutions/device-deployment-mdm" },
+  { name: "Gifting Solution", href: "/solutions/gifting-solution" },
+  { name: "IT Asset Disposal", href: "/solutions/it-asset-disposal" },
+  { name: "HR Solutions", href: "/solutions/hr-solutions" },
+  { name: "IT Consulting Services", href: "/solutions/it-consulting" },
+  { name: "Managed IT Services", href: "/solutions/managed-it-services" },
+  { name: "Payment Services", href: "/solutions/payment-services" },
+  { name: "IT Infrastructure Solutions", href: "/solutions/it-infrastructure" },
   { name: "Networking Solutions", href: "/solutions/networking-solutions" },
-  { name: "Device Deployment", href: "/solutions/device-deployment-mdm" },
+];
+
+const partnersLinks = [
+  { name: "Apple", href: "/partners/apple" },
+  { name: "Nvidia", href: "/partners/nvidia" },
+  { name: "Microsoft", href: "/partners/microsoft" },
+  { name: "Lenovo", href: "/partners/lenovo" },
+  { name: "Autodesk", href: "/partners/autodesk" },
+  { name: "Adobe", href: "/partners/adobe" },
+  { name: "Samsung", href: "/partners/samsung" },
+  { name: "HP", href: "/partners/hp" },
+  { name: "Unity", href: "/partners/unity" },
+  { name: "JAMF", href: "/partners/jamf" },
+  { name: "Unreal Engine", href: "/partners/unreal-engine" },
+  { name: "Logitech", href: "/partners/logitech" },
+  { name: "Cisco", href: "/partners/cisco" },
+  { name: "Asus", href: "/partners/asus" },
+  { name: "Yubico", href: "/partners/yubico" },
+  { name: "Dell", href: "/partners/dell" },
+  { name: "Acer", href: "/partners/acer" },
+];
+
+const industriesLinks = [
+  { name: "AEC", href: "/industries/aec" },
+  { name: "Media & Entertainment", href: "/industries/media-and-entertainment" },
+  { name: "AR / VR / MR / XR", href: "/industries/ar-vr-mr-xr" },
+  { name: "Government Sector", href: "/industries/government" },
+  { name: "IT / ITES / Infrastructure", href: "/industries/it-ites-infra" },
+  { name: "Healthcare & Pharma", href: "/industries/healthcare-pharma" },
+  { name: "Manufacturing & Automotive", href: "/industries/manufacturing-automotive" },
 ];
 
 export const Footer = () => {
   return (
-    <footer className="bg-black text-secondary">
-      <div className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-          {/* Company Info */}
-          <div className="space-y-4">
-            <div className="flex items-center gap-2">
-             <div className="flex items-center gap-2">
-  <a href="https://sniperindia.com/" target="_blank" rel="noopener noreferrer">
-
-      <img
-        src="public/assets/sniper-logo-neww.png"   // change to your actual logo path
-        alt="Logo"
-        className="w-15 h-10 "
-      />
-
-  </a>
-</div>
-
-
-            </div>
-            <p className="text-secondary/80 text-sm leading-relaxed">
-              Sniper Systems and Solutions Pvt. Ltd. is a comprehensive enterprise IT solutions provider,
-              dedicated to delivering customized services that strategically position your business for future readiness.
-            </p>
-            <div className="flex items-start gap-2 text-sm text-secondary/70">
-              <MapPin className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-              <span>Chennai, India</span>
-            </div>
+    <footer className="bg-stone-200 text-stone-800">
+      <div className="container mx-auto px-8 lg:px-16 py-20">
+        {/* Top Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-20 mb-32">
+          {/* Left Column - CTA */}
+          <div className="lg:col-span-1">
+            <h2 className="text-4xl lg:text-5xl font-light leading-tight mb-6 text-stone-900">
+              Stay connected<br />to the future of<br />Enterprise IT
+            </h2>
+            <Link
+              to="/contact"
+              className="inline-flex items-center gap-2 text-lg border-b-2 border-stone-900 pb-1 hover:border-stone-600 transition-colors"
+            >
+              Get in Touch <span>→</span>
+            </Link>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="font-semibold text-lg mb-4 text-secondary">Quick Links</h3>
-            <ul className="space-y-2">
+            <h3 className="text-lg font-normal mb-6 text-stone-900">Quick Links</h3>
+            <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     to={link.href}
-                    className="text-sm text-secondary/70 hover:text-primary transition-colors"
+                    className="text-base text-stone-700 hover:text-stone-900 transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -70,13 +91,13 @@ export const Footer = () => {
 
           {/* Solutions */}
           <div>
-            <h3 className="font-semibold text-lg mb-4 text-secondary">Solutions</h3>
-            <ul className="space-y-2">
+            <h3 className="text-lg font-normal mb-6 text-stone-900">Solutions</h3>
+            <ul className="space-y-3">
               {solutionsLinks.map((link) => (
                 <li key={link.href}>
                   <Link
                     to={link.href}
-                    className="text-sm text-secondary/70 hover:text-primary transition-colors"
+                    className="text-base text-stone-700 hover:text-stone-900 transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -85,34 +106,140 @@ export const Footer = () => {
             </ul>
           </div>
 
-          {/* Contact */}
-          <div>
-            <h3 className="font-semibold text-lg mb-4 text-secondary">Get in Touch</h3>
-            <div className="space-y-3">
-              <a href="mailto:enquiry@sniperindia.com" className="flex items-center gap-2 text-sm text-secondary/70 hover:text-primary transition-colors">
-                <Mail className="h-4 w-4 text-primary" />
-                enquiry@sniperindia.com
-              </a>
-              <a href="tel:+919876543210" className="flex items-center gap-2 text-sm text-secondary/70 hover:text-primary transition-colors">
-                <Phone className="h-4 w-4 text-primary" />
-                +91 98765 43210
-              </a>
+          {/* Partners & Industries Combined */}
+
+            {/* Partners */}
+            <div>
+              <h3 className="text-lg font-normal mb-6 text-stone-900">Partners</h3>
+              <ul className="space-y-3">
+                {partnersLinks.slice(0, 17).map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      to={link.href}
+                      className="text-base text-stone-700 hover:text-stone-900 transition-colors"
+                    >
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
-            <div className="mt-6">
-              <Link to="/contact" className="btn-primary text-sm inline-block">
-                Contact Us
-              </Link>
+
+            {/* Industries */}
+            <div>
+              <h3 className="text-lg font-normal mb-6 text-stone-900">Industries</h3>
+              <ul className="space-y-3">
+                {industriesLinks.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      to={link.href}
+                      className="text-base text-stone-700 hover:text-stone-900 transition-colors"
+                    >
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+        </div>
+
+        {/* Contact Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-16 mb-20">
+          <div className="lg:col-span-1"></div>
+
+          <div className="lg:col-span-2">
+            <h3 className="text-lg font-normal mb-6 text-stone-900">Contact</h3>
+            <div className="space-y-6">
+              <div>
+                <p className="font-normal text-stone-900 mb-2">Sniper Headquarters</p>
+                <p className="text-base text-stone-700">Chennai, Tamil Nadu</p>
+                <p className="text-base text-stone-700">India</p>
+              </div>
+              <div>
+                <a
+                  href="mailto:enquiry@sniperindia.com"
+                  className="text-base text-stone-700 hover:text-stone-900 transition-colors"
+                >
+                  enquiry@sniperindia.com
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* Bottom Bar */}
-      <div className="border-t border-secondary/10">
-        <div className="container mx-auto px-4 py-6">
-          <p className="text-center text-sm text-secondary/60">
-            © 2025 Sniper Systems and Solutions Pvt. Ltd. All rights reserved.
-          </p>
+         <div>
+  <h3 className="text-lg font-normal mb-6 text-stone-900">Social</h3>
+
+  <div className="flex flex-col space-y-3">
+
+    <Link
+      to="#"
+      className="text-base text-stone-700 hover:text-stone-900 transition-colors"
+    >
+      LinkedIn
+    </Link>
+
+    <Link
+      to="#"
+      className="text-base text-stone-700 hover:text-stone-900 transition-colors"
+    >
+      Facebook
+    </Link>
+
+    <Link
+      to="#"
+      className="text-base text-stone-700 hover:text-stone-900 transition-colors"
+    >
+      Instagram
+    </Link>
+
+    <Link
+      to="#"
+      className="text-base text-stone-700 hover:text-stone-900 transition-colors"
+    >
+      Twitter / X
+    </Link>
+
+    <Link
+      to="#"
+      className="text-base text-stone-700 hover:text-stone-900 transition-colors"
+    >
+      YouTube
+    </Link>
+
+  </div>
+</div>
+
+        </div>
+
+        {/* Bottom Section with Brand */}
+        <div className="relative border-t border-stone-400 pt-12">
+          {/* Legal Links */}
+          <div className="flex flex-wrap gap-x-8 gap-y-2 mb-12 text-sm text-stone-700">
+            <Link to="/privacy" className="hover:text-stone-900 transition-colors">
+              Privacy Policy
+            </Link>
+            <Link to="/terms" className="hover:text-stone-900 transition-colors">
+              Terms of Service
+            </Link>
+            <Link to="/support" className="hover:text-stone-900 transition-colors">
+              Acceptable Use Policy
+            </Link>
+          </div>
+
+          {/* Copyright and Brand */}
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8">
+            <p className="text-sm text-stone-700">
+              © Sniper Systems 2025
+            </p>
+
+            {/* Large Brand Typography */}
+            <div className="text-right">
+              <h2 className="text-7xl lg:text-8xl xl:text-9xl font-light tracking-tight text-stone-900 leading-none">
+                Sniper
+              </h2>
+            </div>
+          </div>
         </div>
       </div>
     </footer>
