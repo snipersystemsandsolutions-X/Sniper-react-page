@@ -1,43 +1,102 @@
 import { Layout } from "@/components/Layout";
 import { ArrowRight, CheckCircle, Clock, Lightbulb, Shield, Zap } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
-// -------------------- CTA SECTION WITH CUSTOM CURSOR --------------------
+// -------------------- CTA SECTION WITH SMOOTH CUSTOM CURSOR --------------------
 const CTASection = () => {
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+  const [displayPosition, setDisplayPosition] = useState({ x: 0, y: 0 });
   const [cursorVisible, setCursorVisible] = useState(false);
   const [isHoveringButton, setIsHoveringButton] = useState(false);
   const sectionRef = useRef(null);
   const buttonRef = useRef(null);
+  const animationFrameRef = useRef(null);
+  const lastMousePosition = useRef({ x: 0, y: 0 });
+  const velocity = useRef({ x: 0, y: 0 });
+
+  // Smooth interpolation function
+  const lerp = (start, end, factor) => {
+    return start + (end - start) * factor;
+  };
+
+  // Animation loop for smooth cursor movement
+  const animateCursor = useCallback(() => {
+    if (!cursorVisible) return;
+
+    // Apply smooth easing (higher factor = faster/snappier, lower = smoother)
+    const smoothFactor = isHoveringButton ? 0.2 : 0.1;
+
+    const newX = lerp(displayPosition.x, cursorPosition.x, smoothFactor);
+    const newY = lerp(displayPosition.y, cursorPosition.y, smoothFactor);
+
+    // Calculate velocity for momentum
+    velocity.current.x = newX - displayPosition.x;
+    velocity.current.y = newY - displayPosition.y;
+
+    setDisplayPosition({ x: newX, y: newY });
+
+    animationFrameRef.current = requestAnimationFrame(animateCursor);
+  }, [cursorVisible, cursorPosition, displayPosition, isHoveringButton]);
 
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
 
-    const handleMouseEnter = () => setCursorVisible(true);
+    const handleMouseEnter = () => {
+      setCursorVisible(true);
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+      animationFrameRef.current = requestAnimationFrame(animateCursor);
+    };
+
     const handleMouseLeave = () => {
       setCursorVisible(false);
       setIsHoveringButton(false);
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
     };
-    const handleMouseMove = (e) => setCursorPosition({ x: e.clientX, y: e.clientY });
+
+    const handleMouseMove = (e) => {
+      // Update raw mouse position
+      lastMousePosition.current = { x: e.clientX, y: e.clientY };
+      setCursorPosition({ x: e.clientX, y: e.clientY });
+    };
 
     section.addEventListener("mouseenter", handleMouseEnter);
     section.addEventListener("mouseleave", handleMouseLeave);
     section.addEventListener("mousemove", handleMouseMove);
 
+    // Start animation loop
+    animationFrameRef.current = requestAnimationFrame(animateCursor);
+
     return () => {
       section.removeEventListener("mouseenter", handleMouseEnter);
       section.removeEventListener("mouseleave", handleMouseLeave);
       section.removeEventListener("mousemove", handleMouseMove);
+
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, [animateCursor]);
+
+  // Clean up animation frame on unmount
+  useEffect(() => {
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
     };
   }, []);
 
   return (
     <>
-      {/* Custom Cursor */}
+      {/* Custom Cursor with smooth transition */}
       <div
-        className={`fixed pointer-events-none z-50 flex items-center justify-center rounded-full font-bold text-sm transition-all duration-300 ${
+        className={`fixed pointer-events-none z-50 flex items-center justify-center rounded-full font-bold text-sm transition-all duration-150 ease-out ${
           cursorVisible ? "opacity-100" : "opacity-0"
         } ${
           isHoveringButton
@@ -45,13 +104,34 @@ const CTASection = () => {
             : "w-24 h-24 bg-white text-black"
         }`}
         style={{
-          left: `${cursorPosition.x}px`,
-          top: `${cursorPosition.y}px`,
-          transform: `translate(-50%, -50%) ${cursorVisible ? (isHoveringButton ? "scale(1.3)" : "scale(1)") : "scale(0.5)"}`,
+          left: `${displayPosition.x}px`,
+          top: `${displayPosition.y}px`,
+          transform: `translate(-50%, -50%) ${
+            cursorVisible
+              ? (isHoveringButton ? "scale(1.3)" : "scale(1)")
+              : "scale(0.5)"
+          }`,
+          transition: cursorVisible
+            ? 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.3s ease, height 0.3s ease'
+            : 'all 0.3s ease',
+          filter: 'drop-shadow(0 4px 12px rgba(0, 0, 0, 0.25))',
         }}
       >
         {isHoveringButton ? "CLICK ME!" : "LET'S GO!"}
       </div>
+
+      {/* Optional trailing cursor for extra smoothness */}
+      <div
+        className={`fixed pointer-events-none z-40 rounded-full transition-all duration-300 ease-out ${
+          cursorVisible ? "opacity-30" : "opacity-0"
+        } ${isHoveringButton ? "w-20 h-20 bg-white/30" : "w-16 h-16 bg-white/20"}`}
+        style={{
+          left: `${displayPosition.x - velocity.current.x * 0.5}px`,
+          top: `${displayPosition.y - velocity.current.y * 0.5}px`,
+          transform: 'translate(-50%, -50%)',
+          transition: 'left 0.1s linear, top 0.1s linear',
+        }}
+      />
 
       {/* CTA Section */}
       <section
@@ -67,11 +147,13 @@ const CTASection = () => {
           <Link
             ref={buttonRef}
             to="/contact"
-            className="inline-flex items-center px-12 py-4 border-2 border-white rounded-full text-white font-medium text-lg hover:bg-white hover:text-black transition-colors duration-300"
+            className="inline-flex items-center px-12 py-4 border-2 border-white rounded-full text-white font-medium text-lg hover:bg-white hover:text-black transition-all duration-300 relative z-10"
             onMouseEnter={() => setIsHoveringButton(true)}
             onMouseLeave={() => setIsHoveringButton(false)}
           >
             TELL US
+            {/* Add a pseudo-element to extend hover area */}
+            <span className="absolute inset-[-10px] rounded-full"></span>
           </Link>
         </div>
       </section>
@@ -157,7 +239,7 @@ const Index = () => {
               with Cutting-Edge IT Solutions
             </h1>
             <p className="text-xl text-gray-700 max-w-5xl mx-auto leading-relaxed">
-              At Sniper Systems and Solutions Pvt Ltd, we specialize in delivering comprehensive IT solutions
+              At <strong> Sniper Systems and Solutions Pvt Ltd</strong>, we specialize in delivering comprehensive IT solutions
               tailored to your business needs. From advanced infrastructure management to strategic consulting,
               our team ensures your enterprise stays ahead in a rapidly evolving technological landscape.
             </p>
@@ -214,35 +296,39 @@ const Index = () => {
       </section>
 
       {/* Solutions Section */}
-      <section className="bg-white py-20 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="mb-16">
-            <h2 className="text-6xl md:text-7xl font-semibold text-gray-900 mb-6 leading-tight">
-              Our solutions
-            </h2>
-          </div>
-
-          <div className="space-y-16">
-            {solutions.map((solution, index) => (
-              <div key={index} className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start pb-12 border-b border-gray-300 last:border-0">
-                <div>
-                  <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">
-                    {solution.title}
-                  </h3>
-                </div>
-                <div className="space-y-6">
-                  <p className="text-lg text-gray-800 leading-relaxed">
-                    {solution.description}
-                  </p>
-                  <Link to="/solutions" className="inline-flex items-center px-8 py-3 border-2 border-gray-900 rounded-full text-gray-900 font-medium hover:bg-gray-900 hover:text-white transition-colors duration-300">
-                    Read more
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
+     <section className="bg-white py-20 px-6">
+      <div className="max-w-6xl mx-auto">
+        <div className="mb-16">
+          <h2 className="text-6xl md:text-7xl font-semibold text-gray-900 mb-6 leading-tight">
+            Our solutions
+          </h2>
         </div>
-      </section>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16">
+          {solutions.map((solution, index) => (
+            <div
+  key={index}
+  className="grid grid-cols-1 gap-6 items-start pb-12 border-b border-gray-300"
+>
+  <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">
+    {solution.title}
+  </h3>
+
+  <p className="text-lg text-gray-800 leading-relaxed">
+    {solution.description}
+  </p>
+
+  <button
+    className="inline-flex items-center w-fit px-8 py-3 border-2 border-gray-900 rounded-full text-gray-900 font-medium hover:bg-gray-900 hover:text-white transition-colors duration-300"
+  >
+    Read more
+  </button>
+</div>
+
+          ))}
+        </div>
+      </div>
+    </section>
 
       {/* Benefits Section */}
       <section className="bg-black text-white py-20 px-6 rounded-[4rem] mx-6 my-12">

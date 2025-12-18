@@ -1,45 +1,109 @@
 import { Layout } from "@/components/Layout";
 import { ArrowRight, CheckCircle, Headphones, Lightbulb, Shield, Users } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 
-
-
-// -------------------- CTA SECTION WITH CUSTOM CURSOR --------------------
+// -------------------- CTA SECTION WITH SMOOTH CUSTOM CURSOR --------------------
 const CTASection = () => {
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+  const [displayPosition, setDisplayPosition] = useState({ x: 0, y: 0 });
   const [cursorVisible, setCursorVisible] = useState(false);
   const [isHoveringButton, setIsHoveringButton] = useState(false);
   const sectionRef = useRef(null);
   const buttonRef = useRef(null);
+  const animationFrameRef = useRef(null);
+  const velocity = useRef({ x: 0, y: 0 });
+
+  // Smooth interpolation function
+  const lerp = (start, end, factor) => {
+    return start + (end - start) * factor;
+  };
+
+  // Animation loop for smooth cursor movement
+  const animateCursor = useCallback(() => {
+    if (!cursorVisible) return;
+
+    // Apply smooth easing (higher factor = faster/snappier, lower = smoother)
+    const smoothFactor = isHoveringButton ? 0.25 : 0.15;
+
+    const newX = lerp(displayPosition.x, cursorPosition.x, smoothFactor);
+    const newY = lerp(displayPosition.y, cursorPosition.y, smoothFactor);
+
+    // Calculate velocity for momentum
+    velocity.current.x = newX - displayPosition.x;
+    velocity.current.y = newY - displayPosition.y;
+
+    setDisplayPosition({ x: newX, y: newY });
+
+    animationFrameRef.current = requestAnimationFrame(animateCursor);
+  }, [cursorVisible, cursorPosition, displayPosition, isHoveringButton]);
 
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
 
-    const handleMouseEnter = () => setCursorVisible(true);
+    const handleMouseEnter = () => {
+      setCursorVisible(true);
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+      animationFrameRef.current = requestAnimationFrame(animateCursor);
+    };
+
     const handleMouseLeave = () => {
       setCursorVisible(false);
       setIsHoveringButton(false);
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
     };
-    const handleMouseMove = (e) => setCursorPosition({ x: e.clientX, y: e.clientY });
+
+    const handleMouseMove = (e) => {
+      // Update raw mouse position
+      setCursorPosition({ x: e.clientX, y: e.clientY });
+    };
 
     section.addEventListener("mouseenter", handleMouseEnter);
     section.addEventListener("mouseleave", handleMouseLeave);
     section.addEventListener("mousemove", handleMouseMove);
 
+    // Start animation loop
+    if (cursorVisible) {
+      animationFrameRef.current = requestAnimationFrame(animateCursor);
+    }
+
     return () => {
       section.removeEventListener("mouseenter", handleMouseEnter);
       section.removeEventListener("mouseleave", handleMouseLeave);
       section.removeEventListener("mousemove", handleMouseMove);
+
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, [animateCursor, cursorVisible]);
+
+  // Initialize display position to cursor position when cursor becomes visible
+  useEffect(() => {
+    if (cursorVisible) {
+      setDisplayPosition(cursorPosition);
+    }
+  }, [cursorVisible]);
+
+  // Clean up animation frame on unmount
+  useEffect(() => {
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
     };
   }, []);
 
   return (
     <>
-      {/* Custom Cursor */}
+      {/* Custom Cursor with smooth transition */}
       <div
-        className={`fixed pointer-events-none z-50 flex items-center justify-center rounded-full font-bold text-sm transition-all duration-300 ${
+        className={`fixed pointer-events-none z-50 flex items-center justify-center rounded-full font-bold text-sm transition-all duration-150 ease-out ${
           cursorVisible ? "opacity-100" : "opacity-0"
         } ${
           isHoveringButton
@@ -47,33 +111,55 @@ const CTASection = () => {
             : "w-24 h-24 bg-white text-black"
         }`}
         style={{
-          left: `${cursorPosition.x}px`,
-          top: `${cursorPosition.y}px`,
-          transform: `translate(-50%, -50%) ${cursorVisible ? (isHoveringButton ? "scale(1.3)" : "scale(1)") : "scale(0.5)"}`,
+          left: `${displayPosition.x}px`,
+          top: `${displayPosition.y}px`,
+          transform: `translate(-50%, -50%) ${
+            cursorVisible
+              ? (isHoveringButton ? "scale(1.3)" : "scale(1)")
+              : "scale(0.5)"
+          }`,
+          transition: cursorVisible
+            ? 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), width 0.3s ease, height 0.3s ease'
+            : 'all 0.3s ease',
+          filter: 'drop-shadow(0 4px 12px rgba(0, 0, 0, 0.25))',
         }}
       >
         {isHoveringButton ? "CLICK ME!" : "LET'S GO!"}
       </div>
 
+      {/* Optional trailing cursor for extra smoothness */}
+      <div
+        className={`fixed pointer-events-none z-40 rounded-full transition-all duration-200 ease-out ${
+          cursorVisible ? "opacity-30" : "opacity-0"
+        } ${isHoveringButton ? "w-20 h-20 bg-white/30" : "w-16 h-16 bg-white/20"}`}
+        style={{
+          left: `${displayPosition.x - velocity.current.x * 0.3}px`,
+          top: `${displayPosition.y - velocity.current.y * 0.3}px`,
+          transform: 'translate(-50%, -50%)',
+        }}
+      />
+
       {/* CTA Section */}
       <section
         ref={sectionRef}
-        className="bg-black text-white py-20 px-6 rounded-[4rem] mx-6 my-12 cursor-none"
+        className="bg-black text-white py-20 px-6 rounded-[4rem] mx-6 my-12 cursor-none relative"
       >
-        <div className="max-w-4xl mx-auto text-center">
+        <div className="max-w-4xl mx-auto text-center relative z-10">
           <div className="mb-12">
             <h2 className="text-7xl md:text-8xl font-semibold mb-6 leading-tight">
-             Ready to<br />transform<br />your business?
+              Ready to<br />transform<br />your business?
             </h2>
           </div>
           <Link
             ref={buttonRef}
             to="/contact"
-            className="inline-flex items-center px-12 py-4 border-2 border-white rounded-full text-white font-medium text-lg hover:bg-white hover:text-black transition-colors duration-300"
+            className="inline-flex items-center px-12 py-4 border-2 border-white rounded-full text-white font-medium text-lg hover:bg-white hover:text-black transition-all duration-300 relative z-20"
             onMouseEnter={() => setIsHoveringButton(true)}
             onMouseLeave={() => setIsHoveringButton(false)}
           >
-           GET IN TOUCH
+            GET IN TOUCH
+            {/* Extended hover area to prevent flickering */}
+            <span className="absolute inset-[-15px] rounded-full"></span>
           </Link>
         </div>
       </section>
@@ -81,10 +167,7 @@ const CTASection = () => {
   );
 };
 
-
-
-
-
+// -------------------- MAIN ABOUT PAGE --------------------
 const About = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -406,7 +489,7 @@ const About = () => {
       </section>
 
       {/* CTA Section */}
-    <CTASection />
+      <CTASection />
 
       {/* Scroll to Top Button */}
       {showScrollTop && (

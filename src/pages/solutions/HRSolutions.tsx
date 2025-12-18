@@ -109,25 +109,30 @@ const HRSolutions = () => {
             </h2>
           </div>
 
-          <div className="space-y-16">
-            {services.map((service, index) => (
-              <div key={index} className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start pb-12 border-b border-gray-300 last:border-0">
-                <div>
-                  <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">
-                    {service.title}
-                  </h3>
-                </div>
-                <div className="space-y-6">
-                  <p className="text-lg text-gray-800 leading-relaxed">
-                    {service.description}
-                  </p>
-                  <Link to="/contact" className="inline-flex items-center px-8 py-3 border-2 border-gray-900 rounded-full text-gray-900 font-medium hover:bg-gray-900 hover:text-white transition-colors duration-300">
-                    Get started
-                  </Link>
-                </div>
-              </div>
-            ))}
-          </div>
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-16">
+  {services.map((service, index) => (
+    <div
+      key={index}
+      className="grid grid-cols-1 gap-6 items-start pb-12 border-b border-gray-300"
+    >
+      <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">
+        {service.title}
+      </h3>
+
+      <p className="text-lg text-gray-800 leading-relaxed">
+        {service.description}
+      </p>
+
+      <Link
+        to="/contact"
+        className="inline-flex items-center w-fit px-8 py-3 border-2 border-gray-900 rounded-full text-gray-900 font-medium hover:bg-gray-900 hover:text-white transition-colors duration-300"
+      >
+        Get started
+      </Link>
+    </div>
+  ))}
+</div>
+
         </div>
       </section>
 
