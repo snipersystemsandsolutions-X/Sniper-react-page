@@ -230,7 +230,7 @@ export const Footer = () => {
           {/* Copyright and Brand */}
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8">
             <p className="text-sm text-stone-700">
-              © Sniper Systems 2025
+              © Sniper Systems 2026
             </p>
 
             {/* Large Brand Typography */}

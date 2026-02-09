@@ -1,5 +1,5 @@
 import { Layout } from "@/components/Layout";
-import { ArrowRight, Network, Shield, Users, Building2, Landmark, Heart } from "lucide-react";
+import { ArrowRight, Building2, Heart, Landmark, Network, Shield, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -273,7 +273,7 @@ const Cisco = () => {
         <div className="max-w-4xl mx-auto text-center">
           <div className="mb-12">
             <h2 className="text-7xl md:text-8xl font-semibold mb-6 leading-tight">
-              Have<br />an idea?<br />We make it happen
+              Have an idea?<br />We make it happen
             </h2>
           </div>
           <Link to="/contact" className="inline-flex items-center px-12 py-4 border-2 border-white rounded-full text-white font-medium text-lg hover:bg-white hover:text-black transition-colors duration-300">

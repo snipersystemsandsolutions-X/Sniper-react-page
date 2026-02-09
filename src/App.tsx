@@ -13,6 +13,7 @@ import NotFound from "./pages/NotFound";
 
 // Solutions
 import Solutions from "./pages/solutions/Solutions";
+import CloudSolutions from "./pages/solutions/CloudSolutions";
 import AVSolutions from "./pages/solutions/AVSolutions";
 import DeviceDeploymentMDM from "./pages/solutions/DeviceDeploymentMDM";
 import GiftingSolution from "./pages/solutions/GiftingSolution";
@@ -23,6 +24,7 @@ import ManagedITServices from "./pages/solutions/ManagedITServices";
 import PaymentServices from "./pages/solutions/PaymentServices";
 import ITInfrastructure from "./pages/solutions/ITInfrastructure";
 import NetworkingSolutions from "./pages/solutions/NetworkingSolutions";
+
 
 // Partners
 import Partners from "./pages/partners/Partners";
@@ -80,6 +82,7 @@ const App = () => (
           <Route path="/solutions/payment-services" element={<PaymentServices />} />
           <Route path="/solutions/it-infrastructure" element={<ITInfrastructure />} />
           <Route path="/solutions/networking-solutions" element={<NetworkingSolutions />} />
+          <Route path="/solutions/clould-solutions" element={<CloudSolutions />} />
 
           {/* Partners Routes */}
           <Route path="/partners" element={<Partners />} />

@@ -268,7 +268,7 @@ const Blog = () => {
         <div className="max-w-4xl mx-auto text-center">
           <div className="mb-12">
             <h2 className="text-7xl md:text-8xl font-semibold mb-6 leading-tight">
-              Have<br />an idea?<br />We make it happen
+              Have an idea?<br />We make it happen
             </h2>
           </div>
           <Link

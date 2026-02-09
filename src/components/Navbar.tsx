@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 
 const solutions = [
   { name: "AV Solutions", href: "/solutions/av-solutions", desc: "Professional audio-visual systems" },
+  { name: "Cloud Solutions", href: "/solutions/clould-solutions", desc: "Scalable cloud services" },
   { name: "Device Deployment & MDM", href: "/solutions/device-deployment-mdm", desc: "Seamless device management" },
   { name: "Gifting Solution", href: "/solutions/gifting-solution", desc: "Corporate gifting made easy" },
   { name: "IT Asset Disposal", href: "/solutions/it-asset-disposal", desc: "Secure asset lifecycle management" },
@@ -12,6 +13,7 @@ const solutions = [
   { name: "Payment Services", href: "/solutions/payment-services", desc: "Secure payment processing" },
   { name: "IT Infrastructure Solutions", href: "/solutions/it-infrastructure", desc: "Build robust infrastructure" },
   { name: "Networking Solutions", href: "/solutions/networking-solutions", desc: "Enterprise networking" },
+
 ];
 
 const partners = [

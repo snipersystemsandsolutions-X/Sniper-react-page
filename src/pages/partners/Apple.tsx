@@ -1,3 +1,11 @@
-import { PageTemplate } from "@/components/PageTemplate";
-const Apple = () => <PageTemplate title="Apple" />;
+import { useEffect } from "react";
+
+const Apple = () => {
+  useEffect(() => {
+    window.location.href = "/partners/apple/index.html";
+  }, []);
+
+  return null;
+};
+
 export default Apple;

@@ -11,6 +11,7 @@ const CTASection = () => {
   const [isHoveringButton, setIsHoveringButton] = useState(false);
   const sectionRef = useRef(null);
   const buttonRef = useRef(null);
+
   const animationFrameRef = useRef(null);
   const velocity = useRef({ x: 0, y: 0 });
 
