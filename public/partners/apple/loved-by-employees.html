@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -152,7 +152,9 @@
       .header-visible {
         opacity: 1;
         visibility: visible;
-        transition: opacity 0.3s ease, visibility 0.3s ease;
+        transition:
+          opacity 0.3s ease,
+          visibility 0.3s ease;
       }
     </style>
     <!-- Bootstrap CSS -->
@@ -806,7 +808,7 @@
               class="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent"
               >Work</span
             >
-        </h2>
+          </h2>
         </div>
 
         <!-- Security -->
@@ -1379,7 +1381,7 @@
           })
           .catch((error) => {
             alert(
-              "There was a problem submitting your form. Please try again."
+              "There was a problem submitting your form. Please try again.",
             );
           });
       });
@@ -1878,6 +1880,13 @@
                     href="refresh-program.html"
                     class="text-gray-300 hover:text-red-500 transition-all"
                     >Refresh Program</a
+                  >
+                </li>
+                <li class="menu-item mb-2">
+                  <a
+                    href="https://sniperindia.com/privacy-policy/"
+                    class="text-gray-300 hover:text-red-500 transition-all"
+                    >Privacy Policy</a
                   >
                 </li>
               </ul>

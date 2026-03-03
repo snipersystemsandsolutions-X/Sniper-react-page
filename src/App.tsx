@@ -45,6 +45,7 @@ import Asus from "./pages/partners/Asus";
 import Yubico from "./pages/partners/Yubico";
 import Dell from "./pages/partners/Dell";
 import Acer from "./pages/partners/Acer";
+import AWS from "./pages/partners/AWS";
 
 // Industries
 import Industries from "./pages/industries/Industries";
@@ -55,6 +56,7 @@ import Government from "./pages/industries/Government";
 import ITITESInfra from "./pages/industries/ITITESInfra";
 import HealthcarePharma from "./pages/industries/HealthcarePharma";
 import ManufacturingAutomotive from "./pages/industries/ManufacturingAutomotive";
+import Education from "./pages/industries/Education";
 
 const queryClient = new QueryClient();
 
@@ -103,6 +105,7 @@ const App = () => (
           <Route path="/partners/yubico" element={<Yubico />} />
           <Route path="/partners/dell" element={<Dell />} />
           <Route path="/partners/acer" element={<Acer />} />
+          <Route path="/partners/aws" element={<AWS />} />
 
           {/* Industries Routes */}
           <Route path="/industries" element={<Industries />} />
@@ -113,6 +116,7 @@ const App = () => (
           <Route path="/industries/it-ites-infra" element={<ITITESInfra />} />
           <Route path="/industries/healthcare-pharma" element={<HealthcarePharma />} />
           <Route path="/industries/manufacturing-automotive" element={<ManufacturingAutomotive />} />
+          <Route path="/industries/Education" element={<Education />} />
 
           {/* Catch-all */}
           <Route path="*" element={<NotFound />} />

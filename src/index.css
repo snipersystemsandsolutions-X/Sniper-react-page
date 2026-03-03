@@ -97,12 +97,12 @@
   }
 
   .btn-primary {
-    @apply bg-primary text-primary-foreground px-6 py-3 rounded-md font-semibold 
+    @apply bg-primary text-primary-foreground px-6 py-3 rounded-md font-semibold
            transition-all duration-300 hover:opacity-90 hover:shadow-lg;
   }
 
   .btn-outline {
-    @apply border-2 border-primary text-primary px-6 py-3 rounded-md font-semibold 
+    @apply border-2 border-primary text-primary px-6 py-3 rounded-md font-semibold
            transition-all duration-300 hover:bg-primary hover:text-primary-foreground;
   }
 
@@ -149,4 +149,18 @@
       transform: translateY(0);
     }
   }
+
+  @keyframes slideDown {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.animate-slideDown {
+  animation: slideDown 0.5s ease-in-out forwards;
+}
+
 }

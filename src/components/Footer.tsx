@@ -1,10 +1,24 @@
 import { Link } from "react-router-dom";
+// ScrollToTop.jsx
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+
+import imgSrcc from "@/assets/sniper-logo-black.png";
+
+export const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+};
 
 const quickLinks = [
   { name: "Home", href: "/" },
   { name: "Blog", href: "/blog" },
   { name: "Contact Us", href: "/contact" },
-  { name: "Careers", href: "/careers" },
   { name: "Privacy Policy", href: "/privacy" },
   { name: "Terms of Service", href: "/terms" },
   { name: "Support", href: "/support" },
@@ -12,6 +26,7 @@ const quickLinks = [
 
 const solutionsLinks = [
   { name: "AV Solutions", href: "/solutions/av-solutions" },
+    { name: "Cloud Solutions", href: "/solutions/clould-solutions", desc: "Scalable cloud services" },
   { name: "Device Deployment & MDM", href: "/solutions/device-deployment-mdm" },
   { name: "Gifting Solution", href: "/solutions/gifting-solution" },
   { name: "IT Asset Disposal", href: "/solutions/it-asset-disposal" },
@@ -51,6 +66,7 @@ const industriesLinks = [
   { name: "IT / ITES / Infrastructure", href: "/industries/it-ites-infra" },
   { name: "Healthcare & Pharma", href: "/industries/healthcare-pharma" },
   { name: "Manufacturing & Automotive", href: "/industries/manufacturing-automotive" },
+  { name: "Education", href: "/industries/Education", desc: "EdTech and digital learning solutions" },
 ];
 
 export const Footer = () => {
@@ -64,12 +80,12 @@ export const Footer = () => {
             <h2 className="text-4xl lg:text-5xl font-light leading-tight mb-6 text-stone-900">
               Stay connected<br />to the future of<br />Enterprise IT
             </h2>
-            <Link
-              to="/contact"
+            <a
+              href="/contact"
               className="inline-flex items-center gap-2 text-lg border-b-2 border-stone-900 pb-1 hover:border-stone-600 transition-colors"
             >
               Get in Touch <span>→</span>
-            </Link>
+            </a>
           </div>
 
           {/* Quick Links */}
@@ -78,12 +94,12 @@ export const Footer = () => {
             <ul className="space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.href}>
-                  <Link
-                    to={link.href}
+                  <a
+                    href={link.href}
                     className="text-base text-stone-700 hover:text-stone-900 transition-colors"
                   >
                     {link.name}
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>
@@ -95,12 +111,12 @@ export const Footer = () => {
             <ul className="space-y-3">
               {solutionsLinks.map((link) => (
                 <li key={link.href}>
-                  <Link
-                    to={link.href}
+                  <a
+                    href={link.href}
                     className="text-base text-stone-700 hover:text-stone-900 transition-colors"
                   >
                     {link.name}
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>
@@ -114,12 +130,12 @@ export const Footer = () => {
               <ul className="space-y-3">
                 {partnersLinks.slice(0, 17).map((link) => (
                   <li key={link.href}>
-                    <Link
-                      to={link.href}
+                    <a
+                      href={link.href}
                       className="text-base text-stone-700 hover:text-stone-900 transition-colors"
                     >
                       {link.name}
-                    </Link>
+                    </a>
                   </li>
                 ))}
               </ul>
@@ -131,12 +147,12 @@ export const Footer = () => {
               <ul className="space-y-3">
                 {industriesLinks.map((link) => (
                   <li key={link.href}>
-                    <Link
-                      to={link.href}
+                    <a
+                      href={link.href}
                       className="text-base text-stone-700 hover:text-stone-900 transition-colors"
                     >
                       {link.name}
-                    </Link>
+                    </a>
                   </li>
                 ))}
               </ul>
@@ -216,29 +232,44 @@ export const Footer = () => {
         <div className="relative border-t border-stone-400 pt-12">
           {/* Legal Links */}
           <div className="flex flex-wrap gap-x-8 gap-y-2 mb-12 text-sm text-stone-700">
-            <Link to="/privacy" className="hover:text-stone-900 transition-colors">
+            <a href="/privacy" className="hover:text-stone-900 transition-colors">
               Privacy Policy
-            </Link>
-            <Link to="/terms" className="hover:text-stone-900 transition-colors">
+            </a>
+            <a href="/terms" className="hover:text-stone-900 transition-colors">
               Terms of Service
-            </Link>
-            <Link to="/support" className="hover:text-stone-900 transition-colors">
+            </a>
+            <a href="/support" className="hover:text-stone-900 transition-colors">
               Acceptable Use Policy
-            </Link>
+            </a>
           </div>
 
           {/* Copyright and Brand */}
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8">
             <p className="text-sm text-stone-700">
-              © Sniper Systems 2026
-            </p>
+  ©&nbsp;SniperSystems&nbsp;2026
+</p>
 
-            {/* Large Brand Typography */}
+            {/* Large Brand Typography
             <div className="text-right">
               <h2 className="text-7xl lg:text-8xl xl:text-9xl font-light tracking-tight text-stone-900 leading-none">
                 Sniper
               </h2>
             </div>
+*/}
+
+{/* Large Brand Image - Typography Equivalent */}
+<div className="text-right">
+  <img
+    src={imgSrcc}
+    alt="Sniper"
+    className="inline-block w-[40%] lg:w-[50%] xl:w-[35%] h-auto object-contain"
+  />
+</div>
+
+
+
+
+
           </div>
         </div>
       </div>
