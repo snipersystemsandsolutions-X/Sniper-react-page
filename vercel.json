@@ -1,12 +1,5 @@
 {
-  "routes": [
-    {
-      "src": "/partners/(.*)",
-      "dest": "/partners/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
-    }
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/" }
   ]
 }
