@@ -7,18 +7,41 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies
 node_modules
+
+# Build outputs
 dist
 dist-ssr
+build
+
+# Env files
+.env
+.env.*
 *.local
 
-# Editor directories and files
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
 .vscode/*
 !.vscode/extensions.json
 .idea
-.DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+
+# Misc
+*.zip
+*.tar
+*.gz
+*.rar
+
+# Large media (IMPORTANT for your case)
+*.mp4
+*.mov
+*.avi
+*.webm
+
+# Optional: Ignore raw assets (if not needed in repo)
+public/partners/**/video.*
+public/partners/**/*.psd
+public/partners/**/*.ai
