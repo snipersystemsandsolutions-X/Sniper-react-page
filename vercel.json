@@ -1,6 +1,10 @@
 {
   "routes": [
     {
+      "src": "^/partners/(.*\\.html)$",
+      "dest": "/partners/$1"
+    },
+    {
       "handle": "filesystem"
     },
     {
