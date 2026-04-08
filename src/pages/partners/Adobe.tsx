@@ -1,3 +1,14 @@
-import { PageTemplate } from "@/components/PageTemplate";
-const Adobe = () => <PageTemplate title="Adobe" />;
+import { useEffect } from "react";
+
+const Adobe = () => {
+  useEffect(() => {
+    window.location.replace("/partners/adobe/index.html");
+  }, []);
+
+  return null;
+};
+
 export default Adobe;
+
+
+

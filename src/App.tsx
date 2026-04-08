@@ -3,20 +3,23 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import React, { Suspense } from "react";
 // Pages
-import Index from "./pages/Index";
-import About from "./pages/About";
-import Blog from "./pages/Blog";
-import Contact from "./pages/Contact";
+const Index = React.lazy(() => import("./pages/Index"));
+
+
+const About = React.lazy(() => import("./pages/About"));
+const Blog = React.lazy(() => import("./pages/Blog"));
+const Contact = React.lazy(() => import("./pages/Contact"));
 import NotFound from "./pages/NotFound";
+import Privacy from "./pages/privacy";
+import TermsAndConditions from "./pages/TermsAndConditions";
 
 // Solutions
 import Solutions from "./pages/solutions/Solutions";
 import CloudSolutions from "./pages/solutions/CloudSolutions";
 import AVSolutions from "./pages/solutions/AVSolutions";
 import DeviceDeploymentMDM from "./pages/solutions/DeviceDeploymentMDM";
-import GiftingSolution from "./pages/solutions/GiftingSolution";
 import ITAssetDisposal from "./pages/solutions/ITAssetDisposal";
 import HRSolutions from "./pages/solutions/HRSolutions";
 import ITConsulting from "./pages/solutions/ITConsulting";
@@ -46,6 +49,7 @@ import Yubico from "./pages/partners/Yubico";
 import Dell from "./pages/partners/Dell";
 import Acer from "./pages/partners/Acer";
 import AWS from "./pages/partners/AWS";
+import Azure from "./pages/partners/Azure";
 
 // Industries
 import Industries from "./pages/industries/Industries";
@@ -65,18 +69,21 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
-        <Routes>
+       <BrowserRouter>
+  <Suspense >
+    <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/about" element={<About />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/privacy" element={<Privacy/>}/>
+          <Route path="/terms" element={<TermsAndConditions/>}/>
 
           {/* Solutions Routes */}
           <Route path="/solutions" element={<Solutions />} />
           <Route path="/solutions/av-solutions" element={<AVSolutions />} />
           <Route path="/solutions/device-deployment-mdm" element={<DeviceDeploymentMDM />} />
-          <Route path="/solutions/gifting-solution" element={<GiftingSolution />} />
+
           <Route path="/solutions/it-asset-disposal" element={<ITAssetDisposal />} />
           <Route path="/solutions/hr-solutions" element={<HRSolutions />} />
           <Route path="/solutions/it-consulting" element={<ITConsulting />} />
@@ -106,6 +113,7 @@ const App = () => (
           <Route path="/partners/dell" element={<Dell />} />
           <Route path="/partners/acer" element={<Acer />} />
           <Route path="/partners/aws" element={<AWS />} />
+          <Route path="/partners/azure" element={<Azure />} />
 
           {/* Industries Routes */}
           <Route path="/industries" element={<Industries />} />
@@ -120,8 +128,9 @@ const App = () => (
 
           {/* Catch-all */}
           <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+            </Routes>
+  </Suspense>
+</BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
 );

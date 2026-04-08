@@ -1,7 +1,6 @@
 import { Layout } from "@/components/Layout";
 import { ArrowRight, Cloud, Shield, TrendingUp, Zap } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
 import { motion, useInView, AnimatePresence } from "motion/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -23,7 +22,8 @@ const MarqueeTicker = ({
   reverse?: boolean;
 }) => {
   const trackRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
+  useEffect(() =>
+    {
     const track = trackRef.current;
     if (!track) return;
     const totalWidth = track.scrollWidth / 2;
@@ -37,12 +37,12 @@ const MarqueeTicker = ({
   }, [speed, reverse]);
   const doubled = [...items, ...items];
   return (
-    <div className="overflow-hidden bg-gray-950 py-4 border-y border-gray-800">
-      <div ref={trackRef} className="flex gap-10 whitespace-nowrap will-change-transform">
+    <div className="overflow-hidden bg-gray-950 py-3 sm:py-4 border-y border-gray-800">
+      <div ref={trackRef} className="flex gap-6 sm:gap-10 whitespace-nowrap will-change-transform">
         {doubled.map((text, i) => (
           <span
             key={i}
-            className="flex items-center gap-10 text-[11px] font-semibold tracking-[0.22em] uppercase text-gray-500"
+            className="flex items-center gap-6 sm:gap-10 text-[10px] sm:text-[11px] font-semibold tracking-[0.22em] uppercase text-gray-500"
           >
             {text}
             <span className="w-1.5 h-1.5 rounded-full bg-gray-700 inline-block" />
@@ -71,6 +71,7 @@ const ParallaxImage = ({
     const wrap = wrapRef.current;
     const img = imgRef.current;
     if (!wrap || !img) return;
+    if (window.matchMedia("(max-width: 640px)").matches) return;
     const tween = gsap.fromTo(
       img,
       { yPercent: -8 },
@@ -171,28 +172,30 @@ const BenefitsList = ({ benefits, inView }: { benefits: any[]; inView: boolean }
   }, [inView]);
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-8 sm:space-y-12">
       {benefits.map((benefit, index) => (
         <motion.div
           key={index}
-          className="relative grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pb-12 last:pb-0"
+          className="relative grid grid-cols-1 sm:grid-cols-12 gap-4 sm:gap-8 items-start sm:items-center pb-8 sm:pb-12 last:pb-0"
           initial={{ opacity: 0, y: 25 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.2 + index * 0.1 }}
         >
-          <div className="lg:col-span-2 flex justify-center lg:justify-start">
-            <benefit.icon className="w-8 h-8 text-white" />
+          <div className="flex items-center gap-4 sm:contents">
+            <div className="sm:col-span-2 flex justify-start sm:justify-start flex-shrink-0">
+              <benefit.icon className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
+            </div>
+            <div className="sm:col-span-3 sm:text-left">
+              <p className="text-xs sm:text-sm font-medium text-gray-400 uppercase tracking-wider">
+                {benefit.label}
+              </p>
+            </div>
           </div>
-          <div className="lg:col-span-3 text-center lg:text-left">
-            <p className="text-sm font-medium text-gray-400 uppercase tracking-wider">
-              {benefit.label}
-            </p>
-          </div>
-          <div className="lg:col-span-7">
-            <p className="text-lg text-gray-200 leading-relaxed">{benefit.description}</p>
+          <div className="sm:col-span-7">
+            <p className="text-base sm:text-lg text-gray-200 leading-relaxed">{benefit.description}</p>
           </div>
           {index < benefits.length - 1 && (
-            <div className="absolute bottom-0 left-0 right-0 h-px bg-gray-700 overflow-hidden">
+            <div className="absolute bottom-0 left-0 right-0 h-px bg-gray-700 overflow-hidden sm:col-span-12">
               <div
                 ref={(el) => { linesRef.current[index] = el; }}
                 className="h-full bg-gradient-to-r from-transparent via-gray-400 to-transparent"
@@ -223,22 +226,22 @@ const OfferingsList = ({ offerings, inView }: { offerings: any[]; inView: boolea
   }, [inView]);
 
   return (
-    <div className="space-y-16">
+    <div className="space-y-10 sm:space-y-16">
       {offerings.map((offering, index) => (
         <motion.div
           key={index}
-          className="relative grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start pb-12 last:pb-0"
+          className="relative grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8 lg:gap-16 items-start pb-10 sm:pb-12 last:pb-0"
           initial={{ opacity: 0, y: 40 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1], delay: 0.1 + index * 0.1 }}
         >
           <div>
-            <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">
+            <h3 className="text-sm sm:text-sm font-semibold text-gray-900 uppercase tracking-wider">
               {offering.title}
             </h3>
           </div>
-          <div className="space-y-6">
-            <p className="text-lg text-gray-800 leading-relaxed">{offering.description}</p>
+          <div className="space-y-4 sm:space-y-6">
+            <p className="text-base sm:text-lg text-gray-800 leading-relaxed">{offering.description}</p>
           </div>
           {index < offerings.length - 1 && (
             <div className="absolute bottom-0 left-0 right-0 h-px bg-gray-300 overflow-hidden">
@@ -279,13 +282,13 @@ const BrandsGrid = ({ brands, inView }: { brands: any[]; inView: boolean }) => {
   }, [inView]);
 
   return (
-    <div ref={gridRef} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-12">
+    <div ref={gridRef} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8 sm:gap-12">
       {brands.map((brand, index) => (
         <div
           key={index}
-          className="brand-item opacity-0 flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-300"
+          className="brand-item opacity-0 flex items-center justify-center transition-all duration-300"
         >
-          <img src={brand.logo} alt={brand.name} className="h-8 object-contain" />
+          <img src={brand.logo} alt={brand.name} className="h-6 sm:h-8 object-contain" />
         </div>
       ))}
     </div>
@@ -310,6 +313,7 @@ const MagneticCTALink = ({
   useEffect(() => {
     const btn = btnRef.current;
     if (!btn) return;
+    if (window.matchMedia("(hover: none)").matches) return;
     const onMove = (e: MouseEvent) => {
       const rect = btn.getBoundingClientRect();
       const dx = (e.clientX - (rect.left + rect.width / 2)) * 0.35;
@@ -328,14 +332,14 @@ const MagneticCTALink = ({
     };
   }, []);
   return (
-    <Link
+    <a
       ref={btnRef as any}
-      to={to}
+      href={to}
       className={`will-change-transform ${className ?? ""}`}
       onMouseEnter={onMouseEnter}
     >
       {children}
-    </Link>
+    </a>
   );
 };
 
@@ -353,7 +357,12 @@ const WhiteScreenTransition = ({ onComplete }: { onComplete: () => void }) => {
       onComplete,
     });
   }, []);
-  return <div ref={ref} className="fixed inset-0 bg-white z-[9999] will-change-transform" />;
+  return (
+    <div
+      ref={ref}
+      className="fixed inset-0 bg-white z-[9999] will-change-transform pointer-events-none"
+    />
+  );
 };
 
 // ---- Use Case Card with GSAP hover ----
@@ -365,6 +374,7 @@ const UseCaseCard = ({ useCase }: { useCase: any }) => {
     const card = cardRef.current;
     const img = imgRef.current;
     if (!card || !img) return;
+    if (window.matchMedia("(hover: none)").matches) return;
     const onEnter = () => gsap.to(img, { scale: 1.07, duration: 0.6, ease: "power2.out" });
     const onLeave = () => gsap.to(img, { scale: 1, duration: 0.6, ease: "power2.out" });
     card.addEventListener("mouseenter", onEnter);
@@ -376,7 +386,7 @@ const UseCaseCard = ({ useCase }: { useCase: any }) => {
   }, []);
 
   return (
-    <div ref={cardRef} className="relative bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl overflow-hidden h-80">
+    <div ref={cardRef} className="relative bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl overflow-hidden h-56 sm:h-72 md:h-80">
       <img
         ref={imgRef}
         src={useCase.image}
@@ -384,12 +394,18 @@ const UseCaseCard = ({ useCase }: { useCase: any }) => {
         className="w-full h-full object-cover will-change-transform"
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-      <div className="absolute bottom-0 left-0 right-0 p-8">
-        <h3 className="text-xl font-semibold text-white mb-2 uppercase tracking-wider">
-          {useCase.title}
-        </h3>
-        <p className="text-gray-200 text-sm leading-relaxed">{useCase.description}</p>
-      </div>
+      {(useCase.title || useCase.description) && (
+        <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-8">
+          {useCase.title && (
+            <h3 className="text-base sm:text-xl font-semibold text-white mb-1 sm:mb-2 uppercase tracking-wider">
+              {useCase.title}
+            </h3>
+          )}
+          {useCase.description && (
+            <p className="text-gray-200 text-xs sm:text-sm leading-relaxed">{useCase.description}</p>
+          )}
+        </div>
+      )}
     </div>
   );
 };
@@ -437,7 +453,7 @@ const ITITESInfra = () => {
       icon: Zap,
       label: "PERFORMANCE & UPTIME GUARANTEED",
       description:
-        "Enterprise-grade hardware with proven reliability and minimal downtime. Systems engineered for 24/7 operations, critical workloads, and mission-critical applications where failure is not an option.",
+        "Enterprise-grade hardware with proven reliability and minimal downtime. Systems engineered for operations, critical workloads, and mission-critical applications where failure is not an option.",
     },
     {
       icon: TrendingUp,
@@ -461,34 +477,37 @@ const ITITESInfra = () => {
 
   const useCases = [
     {
-      title: "Software Development Teams",
-      description: "High-performance workstations for coding, testing, and CI/CD workflows",
-      image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=800&q=80",
+      title: "",
+      description: "",
+      image: "https://i.postimg.cc/BQvkxmfN/future-visions-business-technology-concept.jpg",
     },
     {
-      title: "Cloud Infrastructure",
-      description: "DevOps-ready systems for hybrid and multi-cloud management",
-      image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80",
+      title: "",
+      description: "",
+      image: "https://i.postimg.cc/YC5PBkGy/abstract-cybersecurity-concept-design.jpg",
     },
     {
-      title: "Security Operations",
-      description: "SOC workstations and threat intelligence analysis systems",
-      image: "https://images.unsplash.com/photo-1563986768494-4dee2763ff3f?w=800&q=80",
+      title: "",
+      description: "",
+      image: "https://i.postimg.cc/Wz1Ww1KY/woman-smiling-drawn-graphics.jpg",
     },
     {
-      title: "Distributed Teams",
-      description: "Collaboration platforms for remote and hybrid work environments",
-      image: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80",
+      title: "",
+      description: "",
+      image: "https://i.postimg.cc/8PsXFsLZ/html-css-collage-concept-with-person.jpg",
     },
   ];
 
   const trustedBrands = [
-    { name: "Apple",     logo: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" },
-    { name: "NVIDIA",    logo: "https://s3.amazonaws.com/cms.ipressroom.com/219/files/20149/544a6120f6091d588d000048_NVLogo_2D_H/NVLogo_2D_H_0b8ebd28-4ba6-403f-864b-f5b4712a5ad6-prv.jpg" },
+    { name: "Apple",     logo: "https://i.postimg.cc/XvWWW9tZ/Apple-logo-1.png" },
+    { name: "NVIDIA",    logo: "https://upload.wikimedia.org/wikipedia/commons/a/a4/NVIDIA_logo.svg" },
     { name: "Microsoft", logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/Microsoft_logo.svg/1280px-Microsoft_logo.svg.png" },
     { name: "Lenovo",    logo: "https://upload.wikimedia.org/wikipedia/commons/c/c9/Lenovo_%282015%29.svg" },
     { name: "Cisco",     logo: "https://bcassetcdn.com/public/blog/wp-content/uploads/2024/06/14155422/image-1.png" },
-    { name: "Adobe",     logo: "https://upload.wikimedia.org/wikipedia/commons/8/8d/Adobe_Corporate_Logo.svg" },
+    { name: "Adobe",     logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Adobe_logo_and_wordmark_%282017%29.svg/640px-Adobe_logo_and_wordmark_%282017%29.svg.png" },
+    { name: "Autodesk",  logo: "https://upload.wikimedia.org/wikipedia/commons/4/41/Autodesk_Logo_2021.svg" },
+    { name: "Dell",      logo: "https://upload.wikimedia.org/wikipedia/commons/1/18/Dell_logo_2016.svg" },
+    { name: "HP",        logo: "https://upload.wikimedia.org/wikipedia/commons/0/05/HP_logo_2025.svg" },
   ];
 
   // Section refs
@@ -552,24 +571,54 @@ const ITITESInfra = () => {
     );
   }, [useCasesInView]);
 
+  // ✦ NEW: Hero image scale-on-scroll (grows as you scroll down)
+  const heroImgWrapRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = heroImgWrapRef.current;
+    if (!el) return;
+
+    const tween = gsap.fromTo(
+      el,
+      { scale: 0.82, borderRadius: "2.5rem" },
+      {
+        scale: 1,
+        borderRadius: "1.5rem",
+        ease: "none",
+        scrollTrigger: {
+          trigger: el,
+          start: "top 95%",
+          end: "top 10%",
+          scrub: 1.4,
+        },
+      }
+    );
+
+    return () => {
+      tween.scrollTrigger?.kill();
+      tween.kill();
+    };
+  }, []);
+
   const marqueeItems  = ["IT / ITES / Infrastructure", "Enterprise Laptops", "Cloud Enablement", "Cybersecurity", "DevOps", "Digital Economy"];
   const marqueeItems2 = ["Apple", "Lenovo", "Cisco", "Microsoft", "AWS", "Azure", "Cloud-Native", "SOC Operations"];
   const marqueeItems3 = ["Accelerate Your Digital Journey", "Cloud-Native Ready", "IT Innovation", "Sniper Systems", "Digital Progress"];
 
   return (
     <Layout>
-      {showWhiteScreen && <WhiteScreenTransition onComplete={() => setShowWhiteScreen(false)} />}
+      {showWhiteScreen && (
+        <WhiteScreenTransition onComplete={() => setShowWhiteScreen(false)} />
+      )}
 
       {/* ==================== HERO ==================== */}
-      <section className="relative bg-white pt-32 pb-20 px-6 overflow-hidden">
+      <section className="relative bg-white pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-white via-white to-white opacity-60" />
         <div className="relative z-10 max-w-7xl mx-auto">
-          <div className="text-center mb-16" ref={heroRef}>
+          <div className="text-center mb-10 sm:mb-16" ref={heroRef}>
 
             {/* ✦ GSAP word-stagger heading */}
             <h1
               ref={heroHeadingRef}
-              className="text-6xl md:text-7xl font-semibold text-gray-900 mb-6 leading-tight font-sans"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold text-gray-900 mb-4 sm:mb-6 leading-tight font-sans"
               aria-label="Accelerating Innovation for the Digital Economy"
             >
               {["Accelerating", "Innovation", "for", <br key="br" />, "the", "Digital", "Economy"].map((word, i) =>
@@ -582,7 +631,7 @@ const ITITESInfra = () => {
             </h1>
 
             <motion.p
-              className="text-xl text-gray-700 max-w-5xl mx-auto leading-relaxed"
+              className="text-base sm:text-lg md:text-xl text-gray-700 max-w-5xl mx-auto leading-relaxed px-2 sm:px-0"
               initial={{ opacity: 0, y: 30 }}
               animate={heroInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 1.6 }}
@@ -593,23 +642,38 @@ const ITITESInfra = () => {
             </motion.p>
           </div>
 
-          {/* ✦ GSAP Parallax hero image */}
+          {/* ✦ Hero image with scroll-triggered scale animation */}
           <motion.div
-            className="max-w-6xl mx-auto pt-12"
-            initial={{ opacity: 0, y: 40, scale: 0.98 }}
-            animate={heroInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+            className="max-w-6xl mx-auto pt-6 sm:pt-12"
+            initial={{ opacity: 0, y: 40 }}
+            animate={heroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
           >
-            <div className="relative rounded-3xl shadow-2xl overflow-hidden h-96 md:h-[500px] lg:h-[600px]">
+            {/*
+              ✦ heroImgWrapRef is placed on this inner div.
+                 GSAP scrubs scale(0.82 → 1) and borderRadius as you scroll.
+                 overflow-hidden ensures the image never bleeds outside corners.
+                 Framer's scale: 0.98 initial has been removed to avoid conflicts —
+                 GSAP owns the scale entirely on this element.
+            */}
+            <div
+              ref={heroImgWrapRef}
+              className="relative shadow-2xl overflow-hidden h-56 sm:h-80 md:h-[500px] lg:h-[600px]"
+              style={{
+                borderRadius: "2.5rem",
+                willChange: "transform, border-radius",
+                transformOrigin: "center center",
+              }}
+            >
               <ParallaxImage
-                src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1600&q=80"
+                src="https://i.postimg.cc/Zn53MBJ2/businessman-working-futuristic-office.jpg"
                 alt="IT Infrastructure"
                 className="w-full h-full"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
-              <div className="absolute bottom-6 left-6 z-10">
-                <div className="bg-black bg-opacity-50 text-white px-4 py-2 rounded-full backdrop-blur-sm">
-                  <span className="text-sm font-medium">IT / ITES / INFRASTRUCTURE</span>
+              <div className="absolute bottom-4 sm:bottom-6 left-4 sm:left-6 z-10">
+                <div className="bg-black bg-opacity-50 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-full backdrop-blur-sm">
+                  <span className="text-xs sm:text-sm font-medium">IT / ITES / INFRASTRUCTURE</span>
                 </div>
               </div>
             </div>
@@ -620,12 +684,12 @@ const ITITESInfra = () => {
       {/* ✦ GSAP Marquee — after hero */}
       <MarqueeTicker items={marqueeItems} speed={24} />
 
-      {/* ==================== KEY OFFERINGS — ✦ GSAP line-draw ==================== */}
-      <section className="bg-white py-20 px-6">
+      {/* ==================== KEY OFFERINGS ==================== */}
+      <section className="bg-white py-12 sm:py-16 md:py-20 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto" ref={offerRef}>
-          <div className="mb-16">
+          <div className="mb-10 sm:mb-16">
             <motion.h2
-              className="text-6xl md:text-7xl font-semibold text-gray-900 mb-6 leading-tight"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold text-gray-900 mb-4 sm:mb-6 leading-tight"
               initial={{ opacity: 0, y: 50 }}
               animate={offerInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
@@ -637,18 +701,18 @@ const ITITESInfra = () => {
         </div>
       </section>
 
-      {/* ==================== BENEFITS — ✦ GSAP line-draw dividers ==================== */}
+      {/* ==================== BENEFITS ==================== */}
       <motion.section
         ref={benRef}
-        className="bg-black text-white py-20 px-6 rounded-[4rem] mx-6 my-12"
+        className="bg-black text-white py-12 sm:py-16 md:py-20 px-4 sm:px-6 rounded-[2rem] sm:rounded-[4rem] mx-3 sm:mx-6 my-8 sm:my-12"
         initial={{ opacity: 0, y: 60 }}
         animate={benInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
       >
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16">
+          <div className="text-center mb-10 sm:mb-16">
             <motion.h2
-              className="text-6xl md:text-7xl font-semibold mb-6 leading-tight"
+              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold mb-4 sm:mb-6 leading-tight"
               initial={{ opacity: 0, y: 40 }}
               animate={benInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
@@ -660,72 +724,46 @@ const ITITESInfra = () => {
         </div>
       </motion.section>
 
-      {/* ✦ GSAP Marquee — between benefits and featured */}
+      {/* ✦ GSAP Marquee — between benefits and use cases */}
       <MarqueeTicker items={marqueeItems2} speed={30} reverse />
 
-      {/* ==================== FEATURED IMAGE — ✦ GSAP parallax ==================== */}
-      <section className="relative bg-white py-20 px-6">
-        <div className="max-w-6xl mx-auto" ref={featRef}>
-          <motion.h2
-            className="text-6xl md:text-7xl font-semibold text-gray-900 mb-12 leading-tight"
-            initial={{ opacity: 0, y: 50 }}
-            animate={featInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-          >
-            Technology that<br />drives digital progress
-          </motion.h2>
-          <motion.div
-            className="relative rounded-3xl overflow-hidden h-[500px] md:h-[600px] lg:h-[700px]"
-            initial={{ opacity: 0, y: 40, scale: 0.98 }}
-            animate={featInView ? { opacity: 1, y: 0, scale: 1 } : {}}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
-          >
-            <ParallaxImage
-              src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1600&q=80"
-              alt="Digital Technology"
-              className="w-full h-full"
-            />
-          </motion.div>
-        </div>
-      </section>
-
-      {/* ==================== USE CASES — ✦ GSAP stagger ==================== */}
-      <section className="bg-white py-20 px-6">
+      {/* ==================== USE CASES ==================== */}
+      <section className="bg-white py-12 sm:py-16 md:py-20 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto" ref={useCasesRef}>
-          <div className="mb-16">
+          <div className="mb-10 sm:mb-16">
             <motion.h2
-              className="text-6xl md:text-7xl font-semibold text-gray-900 mb-6 leading-tight"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold text-gray-900 mb-4 sm:mb-6 leading-tight"
               initial={{ opacity: 0, y: 50 }}
               animate={useCasesInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
             >
               Powering modern<br />IT operations
             </motion.h2>
-            <div className="w-full h-px bg-gray-300 mt-8" />
+            <div className="w-full h-px bg-gray-300 mt-6 sm:mt-8" />
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 mb-20">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 mb-12 sm:mb-20">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={useCasesInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
             >
               <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider leading-tight">
-                ENABLING AGILITY<br />& INNOVATION
+                ENABLING AGILITY<br />&amp; INNOVATION
               </h3>
             </motion.div>
             <motion.div
-              className="space-y-6"
+              className="space-y-4 sm:space-y-6"
               initial={{ opacity: 0, y: 30 }}
               animate={useCasesInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
             >
-              <p className="text-lg text-gray-800 leading-relaxed">
+              <p className="text-base sm:text-lg text-gray-800 leading-relaxed">
                 From startups to enterprise IT organizations, we provide technology solutions that support rapid
                 development cycles, secure operations, and seamless collaboration across distributed teams and
                 complex infrastructure environments.
               </p>
-              <p className="text-lg text-gray-800 leading-relaxed">
+              <p className="text-base sm:text-lg text-gray-800 leading-relaxed">
                 Our IT/ITES solutions combine enterprise-grade hardware, cloud-ready systems, and comprehensive
                 support services to create technology foundations that scale with your business and adapt to
                 emerging opportunities in the digital economy.
@@ -734,7 +772,7 @@ const ITITESInfra = () => {
           </div>
 
           {/* ✦ GSAP use case cards stagger */}
-          <div ref={useCaseGridRef} className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div ref={useCaseGridRef} className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-8">
             {useCases.map((useCase, index) => (
               <div key={index} className="usecase-card opacity-0">
                 <UseCaseCard useCase={useCase} />
@@ -744,12 +782,12 @@ const ITITESInfra = () => {
         </div>
       </section>
 
-      {/* ==================== STATS — ✦ GSAP animated counters ==================== */}
-      <section className="bg-white py-20 px-6">
+      {/* ==================== STATS ==================== */}
+      <section className="bg-white py-12 sm:py-16 md:py-20 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto" ref={statsRef}>
-          <div className="mb-16">
+          <div className="mb-10 sm:mb-16">
             <motion.h2
-              className="text-6xl md:text-7xl font-semibold text-gray-900 mb-6 leading-tight"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold text-gray-900 mb-4 sm:mb-6 leading-tight"
               initial={{ opacity: 0, y: 50 }}
               animate={statsInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
@@ -759,9 +797,8 @@ const ITITESInfra = () => {
             <div className="w-full h-px bg-gray-300" />
           </div>
 
-          {/* ✦ GSAP counter numbers */}
-          <div className="flex justify-end">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-16">
+          <div className="flex justify-center md:justify-end">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-8 lg:gap-16 w-full sm:w-auto">
               {[
                 { number: "1800", suffix: "+", label: "Happy Customers" },
                 { number: "600",  suffix: "+", label: "IT/ITES Clients" },
@@ -774,10 +811,10 @@ const ITITESInfra = () => {
                   animate={statsInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.3 + i * 0.1 }}
                 >
-                  <div className="text-5xl md:text-6xl text-gray-900 mb-2 font-semibold">
+                  <div className="text-4xl sm:text-5xl md:text-6xl text-gray-900 mb-2 font-semibold">
                     <AnimatedCounter target={stat.number} suffix={stat.suffix} />
                   </div>
-                  <p className="text-gray-600 text-lg">{stat.label}</p>
+                  <p className="text-gray-600 text-base sm:text-lg">{stat.label}</p>
                 </motion.div>
               ))}
             </div>
@@ -785,12 +822,12 @@ const ITITESInfra = () => {
         </div>
       </section>
 
-      {/* ==================== TRUSTED BRANDS — ✦ GSAP random stagger ==================== */}
-      <section className="bg-white py-20 px-6">
+      {/* ==================== TRUSTED BRANDS ==================== */}
+      <section className="bg-white py-12 sm:py-16 md:py-20 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto" ref={brandsRef}>
-          <div className="mb-20">
+          <div className="mb-12 sm:mb-20">
             <motion.h2
-              className="text-6xl md:text-7xl font-semibold text-gray-900 mb-6 leading-tight"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold text-gray-900 mb-4 sm:mb-6 leading-tight"
               initial={{ opacity: 0, y: 50 }}
               animate={brandsInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
@@ -805,20 +842,19 @@ const ITITESInfra = () => {
       {/* ✦ GSAP Marquee — before CTA */}
       <MarqueeTicker items={marqueeItems3} speed={22} />
 
-      {/* ==================== CTA — ✦ GSAP word stagger + magnetic button ==================== */}
+      {/* ==================== CTA ==================== */}
       <motion.section
         ref={ctaRef}
-        className="bg-black text-white py-20 px-6 rounded-[4rem] mx-6 my-12 overflow-hidden"
+        className="bg-black text-white py-12 sm:py-16 md:py-20 px-4 sm:px-6 rounded-[2rem] sm:rounded-[4rem] mx-3 sm:mx-6 my-8 sm:my-12 overflow-hidden"
         initial={{ opacity: 0, y: 60 }}
         animate={ctaInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
       >
         <div className="max-w-4xl mx-auto text-center">
-          <div className="mb-12 overflow-hidden">
-            {/* ✦ GSAP word stagger on CTA heading */}
+          <div className="mb-8 sm:mb-12 overflow-hidden">
             <h2
               ref={ctaHeadingRef}
-              className="text-7xl md:text-8xl font-semibold mb-6 leading-tight"
+              className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-semibold mb-4 sm:mb-6 leading-tight"
               aria-label="Ready to accelerate your digital journey? Let's connect"
             >
               {["Ready", "to", "accelerate", <br key="br1" />, "your", "digital", "journey?", <br key="br2" />, "Let's", "connect"].map((word, i) =>
@@ -835,10 +871,9 @@ const ITITESInfra = () => {
             animate={ctaInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.6 }}
           >
-            {/* ✦ GSAP magnetic button */}
             <MagneticCTALink
               to="/contact"
-              className="inline-flex items-center px-12 py-4 border-2 border-white rounded-full text-white font-medium text-lg hover:bg-white hover:text-black transition-colors duration-300"
+              className="inline-flex items-center px-8 sm:px-12 py-3 sm:py-4 border-2 border-white rounded-full text-white font-medium text-base sm:text-lg hover:bg-white hover:text-black transition-colors duration-300"
             >
               GET STARTED
             </MagneticCTALink>
@@ -851,7 +886,7 @@ const ITITESInfra = () => {
         {showScrollTop && (
           <motion.button
             onClick={scrollToTop}
-            className="fixed bottom-8 right-8 w-14 h-14 bg-white border-2 border-gray-900 rounded-full flex items-center justify-center text-gray-900 hover:bg-gray-900 hover:text-white transition-all duration-300 z-50 shadow-lg"
+            className="fixed bottom-6 sm:bottom-8 right-4 sm:right-8 w-11 sm:w-14 h-11 sm:h-14 bg-white border-2 border-gray-900 rounded-full flex items-center justify-center text-gray-900 hover:bg-gray-900 hover:text-white transition-all duration-300 z-50 shadow-lg"
             aria-label="Scroll to top"
             initial={{ opacity: 0, scale: 0.6, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -860,7 +895,7 @@ const ITITESInfra = () => {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
           >
-            <ArrowRight className="w-6 h-6 -rotate-90" />
+            <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 -rotate-90" />
           </motion.button>
         )}
       </AnimatePresence>

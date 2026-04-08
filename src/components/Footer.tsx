@@ -166,58 +166,66 @@ export const Footer = () => {
 
           <div className="lg:col-span-2">
             <h3 className="text-lg font-normal mb-6 text-stone-900">Contact</h3>
-            <div className="space-y-6">
+            <div className="space-y-4">
               <div>
-                <p className="font-normal text-stone-900 mb-2">Sniper Headquarters</p>
-                <p className="text-base text-stone-700">Chennai, Tamil Nadu</p>
-                <p className="text-base text-stone-700">India</p>
+                <p className="font-normal text-stone-900 mb-4">Chennai | Bangalore | Hyderabad | Coimbatore | Kochi | Gurugram | Vijayawada</p>
+
+               <a
+  href="tel:+918939301100"
+  className="text-base text-stone-700 hover:text-stone-900 transition-colors"
+>
+  +91 8939301100
+</a>
+
               </div>
               <div>
                 <a
                   href="mailto:enquiry@sniperindia.com"
                   className="text-base text-stone-700 hover:text-stone-900 transition-colors"
                 >
-                  enquiry@sniperindia.com
+                  Enquiry@sniperindia.com
                 </a>
               </div>
             </div>
           </div>
 
-         <div>
+        <div>
+
+
   <h3 className="text-lg font-normal mb-6 text-stone-900">Social</h3>
 
   <div className="flex flex-col space-y-3">
 
     <Link
-      to="#"
+      to="https://www.linkedin.com/company/sniper-systems-solutions-pvt-ltd"
       className="text-base text-stone-700 hover:text-stone-900 transition-colors"
     >
       LinkedIn
     </Link>
 
     <Link
-      to="#"
+      to="https://www.facebook.com/snipersystemsandsolution/"
       className="text-base text-stone-700 hover:text-stone-900 transition-colors"
     >
       Facebook
     </Link>
 
     <Link
-      to="#"
+      to="https://www.instagram.com/sniperindia/"
       className="text-base text-stone-700 hover:text-stone-900 transition-colors"
     >
       Instagram
     </Link>
 
     <Link
-      to="#"
+      to="https://x.com/_sniperindia"
       className="text-base text-stone-700 hover:text-stone-900 transition-colors"
     >
       Twitter / X
     </Link>
 
     <Link
-      to="#"
+      to="https://www.youtube.com/@Snipersystemsandsolutions"
       className="text-base text-stone-700 hover:text-stone-900 transition-colors"
     >
       YouTube

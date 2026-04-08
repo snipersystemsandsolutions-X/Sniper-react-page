@@ -1,3 +1,14 @@
-import { PageTemplate } from "@/components/PageTemplate";
-const Lenovo = () => <PageTemplate title="Lenovo" />;
+import { useEffect } from "react";
+
+const Lenovo = () => {
+  useEffect(() => {
+    window.location.replace("/partners/lenovo-authorized-platinum-partner-reseller/index.html");
+  }, []);
+
+  return null;
+};
+
 export default Lenovo;
+
+
+

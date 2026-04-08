@@ -31,16 +31,7 @@ const SvgIcons = {
       <line x1="9" y1="18" x2="11" y2="18" opacity="0.35" />
     </svg>
   ),
-  gift: (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
-      <rect x="3" y="8" width="18" height="4" rx="1.5" />
-      <path d="M5 12V20H19V12" />
-      <line x1="12" y1="8" x2="12" y2="20" />
-      <path d="M8 6C8 4.3 9.6 3 11.2 3C13.5 3 14 6 12 7.5" />
-      <path d="M16 6C16 4.3 14.4 3 12.8 3C10.5 3 10 6 12 7.5" />
-      <circle cx="12" cy="10.5" r="1" fill="currentColor" stroke="none" />
-    </svg>
-  ),
+
   disposal: (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4">
       <polyline points="3,6 5,6 21,6" />
@@ -185,7 +176,7 @@ const solutionGroups = [
     items: [
       { name: "HR Solutions", href: "/solutions/hr-solutions", desc: "Streamline your HR operations", iconKey: "hr" },
       { name: "Payment Services", href: "/solutions/payment-services", desc: "Secure and reliable payment processing", iconKey: "payment" },
-      { name: "Gifting Solution", href: "/solutions/gifting-solution", desc: "Corporate gifting made easy", iconKey: "gift" },
+
     ],
   },
   {
@@ -235,7 +226,7 @@ const partnerGroups = [
   },
   {
     label: "Software & Cloud",
-    items: ["Microsoft", "Adobe", "Autodesk", "AWS", "Unity", "Unreal Engine"],
+    items: ["Microsoft", "Adobe", "Autodesk", "AWS","Azure", "Unity", "Unreal Engine"],
   },
   {
     label: "Networking & Security",
@@ -578,13 +569,13 @@ export const Navbar = () => {
             {/* Bottom bar */}
             <div style={{ borderTop: "1px solid #1e1e1e", padding: "12px 32px", background: "#0d0d0d", display: "flex", alignItems: "center", gap: "8px" }}>
               <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: "12px", color: "#6b7280" }}>
-                Need help choosing? Talk to our experts.
+                Explore the right solution for your business.
               </span>
-              <a href="/contact" onClick={close} style={{
+              <a href="/solutions" onClick={close} style={{
                 fontFamily: "'DM Sans', sans-serif", fontSize: "12px", fontWeight: 600,
                 color: "#d1d5db", marginLeft: "4px", textDecoration: "none", borderBottom: "1px solid #4b5563",
               }}>
-                Get in touch →
+              Browse solutions →
               </a>
             </div>
           </MegaPanel>
@@ -687,7 +678,7 @@ export const Navbar = () => {
                 <a href="/contact" onClick={() => setMobileMenuOpen(false)}
                   style={{ fontFamily: "'DM Sans', sans-serif" }}
                   className="block w-full py-3.5 px-4 text-center text-sm font-semibold text-white bg-gray-800 hover:bg-gray-700 rounded-xl transition-all border border-gray-700 active:scale-95">
-                  Contact Sales
+                  Contact Us
                 </a>
                 <div className="mt-4 space-y-2 text-sm text-gray-500" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                   <div className="flex items-center gap-2"><span className="text-gray-600">📞</span><span>+91 8939301100</span></div>

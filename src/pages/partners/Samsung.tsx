@@ -1,3 +1,14 @@
-import { PageTemplate } from "@/components/PageTemplate";
-const Samsung = () => <PageTemplate title="Samsung" />;
+import { useEffect } from "react";
+
+const Samsung = () => {
+  useEffect(() => {
+    window.location.replace("/partners/Samsung/index.html");
+  }, []);
+
+  return null;
+};
+
 export default Samsung;
+
+
+

@@ -1,3 +1,14 @@
-import { PageTemplate } from "@/components/PageTemplate";
-const Autodesk = () => <PageTemplate title="Autodesk" />;
+import { useEffect } from "react";
+
+const Autodesk = () => {
+  useEffect(() => {
+    window.location.replace("/partners/autodesk/index.html");
+  }, []);
+
+  return null;
+};
+
 export default Autodesk;
+
+
+

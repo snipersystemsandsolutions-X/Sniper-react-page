@@ -1,7 +1,6 @@
 import { Layout } from "@/components/Layout";
 import { ArrowRight, Award, Cpu, Globe, Headphones, Shield } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
 import { motion, useInView, AnimatePresence } from "motion/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -37,12 +36,12 @@ const MarqueeTicker = ({
   }, [speed, reverse]);
   const doubled = [...items, ...items];
   return (
-    <div className="overflow-hidden bg-gray-950 py-4 border-y border-gray-800">
-      <div ref={trackRef} className="flex gap-10 whitespace-nowrap will-change-transform">
+    <div className="overflow-hidden bg-gray-950 py-3 sm:py-4 border-y border-gray-800">
+      <div ref={trackRef} className="flex gap-6 sm:gap-10 whitespace-nowrap will-change-transform">
         {doubled.map((text, i) => (
           <span
             key={i}
-            className="flex items-center gap-10 text-[11px] font-semibold tracking-[0.22em] uppercase text-gray-500"
+            className="flex items-center gap-6 sm:gap-10 text-[10px] sm:text-[11px] font-semibold tracking-[0.18em] sm:tracking-[0.22em] uppercase text-gray-500"
           >
             {text}
             <span className="w-1.5 h-1.5 rounded-full bg-gray-700 inline-block" />
@@ -165,25 +164,31 @@ const BenefitsList = ({ benefits, inView }: { benefits: any[]; inView: boolean }
   }, [inView]);
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-8 sm:space-y-12">
       {benefits.map((benefit, index) => (
         <motion.div
           key={index}
-          className="relative grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pb-12 last:pb-0"
+          className="relative pb-8 sm:pb-12 last:pb-0"
           initial={{ opacity: 0, y: 25 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.2 + index * 0.1 }}
         >
-          <div className="lg:col-span-2 flex justify-center lg:justify-start">
-            <benefit.icon className="w-8 h-8 text-white" />
-          </div>
-          <div className="lg:col-span-3 text-center lg:text-left">
-            <p className="text-sm font-medium text-gray-400 uppercase tracking-wider">
-              {benefit.label}
-            </p>
-          </div>
-          <div className="lg:col-span-7">
-            <p className="text-lg text-gray-200 leading-relaxed">{benefit.description}</p>
+          <div className="flex flex-col sm:flex-row sm:items-start lg:grid lg:grid-cols-12 lg:items-center gap-4 sm:gap-6 lg:gap-8">
+            <div className="lg:col-span-2 flex justify-start">
+              <benefit.icon className="w-7 h-7 sm:w-8 sm:h-8 text-white flex-shrink-0" />
+            </div>
+            <div className="flex flex-col gap-2 sm:gap-3 lg:contents">
+              <div className="lg:col-span-3">
+                <p className="text-xs sm:text-sm font-medium text-gray-400 uppercase tracking-wider">
+                  {benefit.label}
+                </p>
+              </div>
+              <div className="lg:col-span-7">
+                <p className="text-base sm:text-lg text-gray-200 leading-relaxed">
+                  {benefit.description}
+                </p>
+              </div>
+            </div>
           </div>
           {index < benefits.length - 1 && (
             <div className="absolute bottom-0 left-0 right-0 h-px bg-gray-700 overflow-hidden">
@@ -231,14 +236,14 @@ const MagneticCTALink = ({
     };
   }, []);
   return (
-    <Link ref={btnRef as any} to={to} className={`will-change-transform ${className ?? ""}`}>
+    <a ref={btnRef as any} href={to} className={`will-change-transform ${className ?? ""}`}>
       {children}
-    </Link>
+    </a>
   );
 };
 
 // ========================================================
-// WHITE SCREEN TRANSITION — GSAP curtain wipe
+// WHITE SCREEN TRANSITION
 // ========================================================
 const WhiteScreenTransition = ({ onComplete }: { onComplete: () => void }) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -254,7 +259,7 @@ const WhiteScreenTransition = ({ onComplete }: { onComplete: () => void }) => {
   return <div ref={ref} className="fixed inset-0 bg-white z-[9999] will-change-transform" />;
 };
 
-// ---- Solution Card with GSAP line-draw divider ----
+// ---- Solution Card ----
 const SolutionCard = ({ solution, index }: { solution: any; index: number }) => {
   const ref = useRef<HTMLDivElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
@@ -272,43 +277,52 @@ const SolutionCard = ({ solution, index }: { solution: any; index: number }) => 
 
   return (
     <motion.div
-  ref={ref}
-  className="relative grid grid-cols-1 gap-6 items-start pb-16"
-  initial={{ opacity: 0, y: 40 }}
-  animate={inView ? { opacity: 1, y: 0 } : {}}
-  transition={{ duration: 0.75, ease, delay: (index % 2) * 0.1 }}
->
-  <h3 className="text-sm font-semibold text-gray-900 uppercase tracking-wider">
-    {solution.title}
-  </h3>
-
-  <p className="text-lg text-gray-800 leading-relaxed">
-    {solution.description}
-  </p>
-
-  <motion.div
-    whileHover={{ scale: 1.03 }}
-    whileTap={{ scale: 0.97 }}
-    transition={{ type: "spring", stiffness: 300, damping: 20 }}
-    className="inline-block"
-  >
-    <Link
-      to="/contact"
-      className="inline-flex items-center w-fit px-8 py-3 border-2 border-gray-900 rounded-full text-gray-900 font-medium hover:bg-gray-900 hover:text-white transition-colors duration-300"
+      ref={ref}
+      className="relative grid grid-cols-1 gap-4 sm:gap-6 items-start pb-12 sm:pb-16 group"
+      initial={{ opacity: 0, y: 40 }}
+      animate={inView ? { opacity: 1, y: 0 } : {}}
+      transition={{ duration: 0.75, ease, delay: (index % 2) * 0.1 }}
     >
-      Learn more
-    </Link>
-  </motion.div>
+      {/* Image */}
+      <div className="relative w-full h-44 sm:h-52 overflow-hidden rounded-xl sm:rounded-2xl">
+        <img
+          src={solution.image}
+          alt={solution.title}
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition duration-500" />
+      </div>
 
-  {/* ✦ Divider */}
-  <div className="absolute bottom-8 left-0 right-0 h-px bg-gray-300 overflow-hidden">
-    <div
-      ref={lineRef}
-      className="h-full origin-left bg-gradient-to-r from-transparent via-gray-600 to-transparent"
-      style={{ transform: "scaleX(0)" }}
-    />
-  </div>
-</motion.div>
+      <h3 className="text-xs sm:text-sm font-semibold text-gray-900 uppercase tracking-wider">
+        {solution.title}
+      </h3>
+
+      <p className="text-base sm:text-lg text-gray-800 leading-relaxed">
+        {solution.description}
+      </p>
+
+      <motion.div
+        whileHover={{ scale: 1.03 }}
+        whileTap={{ scale: 0.97 }}
+        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        className="inline-block"
+      >
+        <a
+          href="/contact"
+          className="inline-flex items-center w-fit px-6 sm:px-8 py-2.5 sm:py-3 border-2 border-gray-900 rounded-full text-gray-900 text-sm sm:text-base font-medium hover:bg-gray-900 hover:text-white transition-colors duration-300"
+        >
+          Learn more
+        </a>
+      </motion.div>
+
+      <div className="absolute bottom-6 sm:bottom-8 left-0 right-0 h-px bg-gray-300 overflow-hidden">
+        <div
+          ref={lineRef}
+          className="h-full origin-left bg-gradient-to-r from-transparent via-gray-600 to-transparent"
+          style={{ transform: "scaleX(0)" }}
+        />
+      </div>
+    </motion.div>
   );
 };
 
@@ -328,12 +342,42 @@ const ITInfrastructure = () => {
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   const solutions = [
-    { title: "End-User Computing",              description: "We architect and deploy desktop/laptop and productivity platforms that empower employees while simplifying management. Our solutions improve efficiency and user experience." },
-    { title: "Networking & Connectivity",        description: "We build high-performance LAN/WAN networks and integrated Wi-Fi/telecom environments for fast, secure, reliable connectivity." },
-    { title: "Audio/Visual & Collaboration",     description: "We integrate AV, UC, conferencing, digital signage, and collaboration systems to enhance communication and teamwork." },
-    { title: "Data Center & Virtualisation",     description: "We design scalable, resilient data center infrastructures for mission-critical workloads. We guide enterprises through virtualization, automation, and cloud transformation." },
-    { title: "Enterprise Mobility",              description: "We enable secure remote workforces with device management, connectivity, and collaboration platforms using modern MDM and wireless technologies." },
-    { title: "High Performance Computing (HPC)", description: "We deliver HPC solutions for simulations, analytics, AI/ML workloads, and scientific computing — combining CPU/GPU power, storage, and networking." },
+    {
+      title: "End-User Computing",
+      description:
+        "We architect and deploy desktop/laptop and productivity platforms that empower employees while simplifying management. Our solutions improve efficiency and user experience.",
+      image: "https://i.postimg.cc/DfYnDKMk/55304.jpg",
+    },
+    {
+      title: "Networking & Connectivity",
+      description:
+        "We build high-performance LAN/WAN networks and integrated Wi-Fi/telecom environments for fast, secure, reliable connectivity.",
+      image: "https://i.postimg.cc/brKXvp7B/118b6aa3-3076-4952-af58-422b82174d33.jpg",
+    },
+    {
+      title: "Audio/Visual & Collaboration",
+      description:
+        "We integrate AV, UC, conferencing, digital signage, and collaboration systems to enhance communication and teamwork.",
+      image: "https://i.postimg.cc/5jcGVpzr/image.jpg",
+    },
+    {
+      title: "Data Center & Virtualisation",
+      description:
+        "We design scalable, resilient data center infrastructures for mission-critical workloads. We guide enterprises through virtualization, automation, and cloud transformation.",
+      image: "https://i.postimg.cc/rFXMc9MJ/3199.jpg",
+    },
+    {
+      title: "Enterprise Mobility",
+      description:
+        "We enable secure remote workforces with device management, connectivity, and collaboration platforms using modern MDM and wireless technologies.",
+      image: "https://i.postimg.cc/mrqKjbD4/19199663.jpg",
+    },
+    {
+      title: "High Performance Computing (HPC)",
+      description:
+        "We deliver HPC solutions for simulations, analytics, AI/ML workloads, and scientific computing — combining CPU/GPU power, storage, and networking.",
+      image: "https://i.postimg.cc/V6QD55v1/glowing.jpg",
+    },
   ];
 
   const benefits = [
@@ -345,25 +389,25 @@ const ITInfrastructure = () => {
   ];
 
   // Section refs
-  const heroRef    = useRef(null);
-  const statsRef   = useRef(null);
-  const solRef     = useRef(null);
-  const featRef    = useRef(null);
-  const benRef     = useRef(null);
-  const addImgRef  = useRef(null);
-  const ctaRef     = useRef(null);
+  const heroRef   = useRef(null);
+  const statsRef  = useRef(null);
+  const solRef    = useRef(null);
+  const featRef   = useRef(null);
+  const benRef    = useRef(null);
+  const addImgRef = useRef(null);
+  const ctaRef    = useRef(null);
 
-  const heroInView    = useInView(heroRef,   { once: true, margin: "-60px" });
-  const statsInView   = useInView(statsRef,  { once: true, margin: "-60px" });
-  const solInView     = useInView(solRef,    { once: true, margin: "-60px" });
-  const featInView    = useInView(featRef,   { once: true, margin: "-60px" });
-  const benInView     = useInView(benRef,    { once: true, margin: "-60px" });
-  const addImgInView  = useInView(addImgRef, { once: true, margin: "-60px" });
-  const ctaInView     = useInView(ctaRef,    { once: true, margin: "-100px" });
+  const heroInView   = useInView(heroRef,   { once: true, margin: "-60px" });
+  const statsInView  = useInView(statsRef,  { once: true, margin: "-60px" });
+  const solInView    = useInView(solRef,    { once: true, margin: "-60px" });
+  const featInView   = useInView(featRef,   { once: true, margin: "-60px" });
+  const benInView    = useInView(benRef,    { once: true, margin: "-60px" });
+  const addImgInView = useInView(addImgRef, { once: true, margin: "-60px" });
+  const ctaInView    = useInView(ctaRef,    { once: true, margin: "-100px" });
 
   const ease = [0.16, 1, 0.3, 1];
 
-  // ✦ GSAP: Hero heading word-stagger
+  // GSAP: Hero heading word-stagger
   const heroHeadingRef = useRef<HTMLHeadingElement>(null);
   useEffect(() => {
     const el = heroHeadingRef.current;
@@ -376,7 +420,7 @@ const ITInfrastructure = () => {
     );
   }, []);
 
-  // ✦ GSAP: CTA heading word stagger
+  // GSAP: CTA heading word stagger
   const ctaHeadingRef = useRef<HTMLHeadingElement>(null);
   useEffect(() => {
     if (!ctaInView) return;
@@ -399,20 +443,19 @@ const ITInfrastructure = () => {
       {showWhiteScreen && <WhiteScreenTransition onComplete={() => setShowWhiteScreen(false)} />}
 
       {/* ==================== HERO ==================== */}
-      <section className="relative bg-white pt-32 pb-20 px-6 overflow-hidden">
+      <section className="relative bg-white pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 px-4 sm:px-6 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-white via-white to-white opacity-60" />
         <div className="relative z-10 max-w-7xl mx-auto">
-          <div className="text-center mb-16" ref={heroRef}>
+          <div className="text-center mb-10 sm:mb-14 md:mb-16" ref={heroRef}>
 
-            {/* ✦ GSAP word-stagger heading */}
             <h1
               ref={heroHeadingRef}
-              className="text-6xl md:text-7xl font-semibold text-gray-900 mb-6 leading-tight font-sans"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold text-gray-900 mb-4 sm:mb-6 leading-tight font-sans"
               aria-label="Future-Ready IT Infrastructure for Unstoppable Growth"
             >
               {["Future-Ready", "IT", "Infrastructure", <br key="br" />, "for", "Unstoppable", "Growth"].map((word, i) =>
                 typeof word !== "string" ? word : (
-                  <span key={i} className="infra-word inline-block opacity-0 mr-[0.25em] last:mr-0">
+                  <span key={i} className="infra-word inline-block opacity-0 mr-[0.22em] last:mr-0">
                     {word}
                   </span>
                 )
@@ -420,7 +463,7 @@ const ITInfrastructure = () => {
             </h1>
 
             <motion.p
-              className="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed mb-4"
+              className="text-base sm:text-lg md:text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed mb-3 sm:mb-4 px-2"
               initial={{ opacity: 0, y: 30 }}
               animate={heroInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, ease, delay: 1.6 }}
@@ -428,7 +471,7 @@ const ITInfrastructure = () => {
               Streamline Operations with Sniper's IT Infrastructure Services
             </motion.p>
             <motion.p
-              className="text-xl text-gray-700 max-w-5xl mx-auto leading-relaxed"
+              className="text-base sm:text-lg md:text-xl text-gray-700 max-w-5xl mx-auto leading-relaxed px-2"
               initial={{ opacity: 0, y: 30 }}
               animate={heroInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, ease, delay: 1.72 }}
@@ -437,23 +480,23 @@ const ITInfrastructure = () => {
             </motion.p>
           </div>
 
-          {/* ✦ GSAP Parallax hero image */}
-          <div className="max-w-6xl mx-auto pt-12">
+          {/* Hero image */}
+          <div className="max-w-6xl mx-auto pt-8 sm:pt-10 md:pt-12">
             <motion.div
-              className="relative rounded-3xl shadow-2xl overflow-hidden h-96 md:h-[500px] lg:h-[600px]"
+              className="relative rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden h-56 sm:h-80 md:h-[500px] lg:h-[600px]"
               initial={{ opacity: 0, y: 40, scale: 0.98 }}
               animate={heroInView ? { opacity: 1, y: 0, scale: 1 } : {}}
               transition={{ duration: 1, ease, delay: 0.3 }}
             >
               <ParallaxImage
-                src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1600&q=80"
+                src="https://i.postimg.cc/HsNHZBXT/modernroom.jpg"
                 alt="IT Infrastructure"
                 className="w-full h-full"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
-              <div className="absolute bottom-6 left-6 z-10">
-                <div className="bg-black bg-opacity-50 text-white px-4 py-2 rounded-full backdrop-blur-sm">
-                  <span className="text-sm font-medium">IT INFRASTRUCTURE</span>
+              <div className="absolute bottom-3 sm:bottom-6 left-3 sm:left-6 z-10">
+                <div className="bg-black bg-opacity-50 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-full backdrop-blur-sm">
+                  <span className="text-xs sm:text-sm font-medium">IT INFRASTRUCTURE</span>
                 </div>
               </div>
             </motion.div>
@@ -461,16 +504,13 @@ const ITInfrastructure = () => {
         </div>
       </section>
 
-      {/* ✦ GSAP Marquee — after hero */}
-      <MarqueeTicker items={marqueeItems} speed={24} />
-
-      {/* ==================== STATS — ✦ GSAP animated counters ==================== */}
-      <section className="bg-white py-20 px-6">
+      {/* ==================== STATS ==================== */}
+      <section className="bg-white py-14 sm:py-16 md:py-20 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto" ref={statsRef}>
           <div className="flex justify-center">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16">
+            <div className="grid grid-cols-2 gap-8 sm:gap-12 lg:gap-16 w-full max-w-lg sm:max-w-xl">
               {[
-                { number: "15", suffix: "+", label: "Years of Industry Experience" },
+                { number: "15",   suffix: "+", label: "Years of Industry Experience" },
                 { number: "1900", suffix: "+", label: "Satisfied Customers" },
               ].map((stat, i) => (
                 <motion.div
@@ -480,10 +520,10 @@ const ITInfrastructure = () => {
                   animate={statsInView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.7, ease, delay: i * 0.12 }}
                 >
-                  <div className="text-5xl md:text-6xl text-gray-900 mb-2 font-semibold">
+                  <div className="text-4xl sm:text-5xl md:text-6xl text-gray-900 mb-1 sm:mb-2 font-semibold">
                     <AnimatedCounter target={stat.number} suffix={stat.suffix} />
                   </div>
-                  <p className="text-gray-600 text-lg">{stat.label}</p>
+                  <p className="text-gray-600 text-sm sm:text-base md:text-lg">{stat.label}</p>
                 </motion.div>
               ))}
             </div>
@@ -491,20 +531,24 @@ const ITInfrastructure = () => {
         </div>
       </section>
 
-      {/* ==================== SOLUTIONS — ✦ GSAP line-draw per card ==================== */}
-      <section className="bg-white py-20 px-6">
+      {/* Marquee — after stats */}
+      <MarqueeTicker items={marqueeItems} speed={24} />
+
+      {/* ==================== SOLUTIONS ==================== */}
+      <section className="bg-white py-16 sm:py-20 md:py-24 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto" ref={solRef}>
-          <div className="mb-16">
+          <div className="mb-12 sm:mb-16 md:mb-20">
             <motion.h2
-              className="text-6xl md:text-7xl font-semibold text-gray-900 mb-6 leading-tight"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold text-gray-900 leading-tight"
               initial={{ opacity: 0, y: 50 }}
               animate={solInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.9, ease }}
+              transition={{ duration: 0.9 }}
             >
-              Our Comprehensive<br />Solutions
+              Our Comprehensive <br /> Solutions
             </motion.h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-0">
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 lg:gap-x-12">
             {solutions.map((solution, index) => (
               <SolutionCard key={index} solution={solution} index={index} />
             ))}
@@ -512,14 +556,14 @@ const ITInfrastructure = () => {
         </div>
       </section>
 
-      {/* ✦ GSAP Marquee — between solutions and featured */}
+      {/* Marquee — between solutions and featured */}
       <MarqueeTicker items={marqueeItems2} speed={30} reverse />
 
-      {/* ==================== FEATURED IMAGE — ✦ GSAP parallax ==================== */}
-      <section className="relative bg-white py-20 px-6">
+      {/* ==================== FEATURED IMAGE ==================== */}
+      <section className="relative bg-white py-14 sm:py-16 md:py-20 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto" ref={featRef}>
           <motion.h2
-            className="text-6xl md:text-7xl font-semibold text-gray-900 mb-12 leading-tight"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold text-gray-900 mb-8 sm:mb-10 md:mb-12 leading-tight"
             initial={{ opacity: 0, y: 50 }}
             animate={featInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.9, ease }}
@@ -527,13 +571,13 @@ const ITInfrastructure = () => {
             Building the backbone<br />of your digital future
           </motion.h2>
           <motion.div
-            className="relative rounded-3xl overflow-hidden h-[500px] md:h-[600px] lg:h-[700px]"
+            className="relative rounded-2xl sm:rounded-3xl overflow-hidden h-64 sm:h-96 md:h-[500px] lg:h-[600px] xl:h-[700px]"
             initial={{ opacity: 0, y: 40, scale: 0.98 }}
             animate={featInView ? { opacity: 1, y: 0, scale: 1 } : {}}
             transition={{ duration: 1, ease, delay: 0.15 }}
           >
             <ParallaxImage
-              src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1600&q=80"
+              src="https://i.postimg.cc/sD3vCVnS/IT-Infrastructure-Management.jpg"
               alt="Technology Infrastructure"
               className="w-full h-full"
             />
@@ -541,18 +585,18 @@ const ITInfrastructure = () => {
         </div>
       </section>
 
-      {/* ==================== BENEFITS — ✦ GSAP line-draw dividers ==================== */}
+      {/* ==================== BENEFITS ==================== */}
       <motion.section
         ref={benRef}
-        className="bg-black text-white py-20 px-6 rounded-[4rem] mx-6 my-12"
+        className="bg-black text-white py-14 sm:py-16 md:py-20 px-4 sm:px-6 rounded-[2rem] sm:rounded-[3rem] lg:rounded-[4rem] mx-3 sm:mx-6 my-8 sm:my-10 md:my-12"
         initial={{ opacity: 0, y: 60 }}
         animate={benInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.9, ease }}
       >
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16">
+          <div className="text-center mb-10 sm:mb-14 md:mb-16">
             <motion.h2
-              className="text-6xl md:text-7xl font-semibold mb-6 leading-tight"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-semibold mb-4 sm:mb-6 leading-tight"
               initial={{ opacity: 0, y: 40 }}
               animate={benInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, ease, delay: 0.1 }}
@@ -564,18 +608,35 @@ const ITInfrastructure = () => {
         </div>
       </motion.section>
 
-      {/* ==================== ADDITIONAL IMAGE — ✦ GSAP parallax ==================== */}
-      <section className="bg-white py-20 px-6">
-        <div className="max-w-6xl mx-auto" ref={addImgRef}>
+      {/* ==================== ADDITIONAL IMAGES ==================== */}
+      <section className="bg-white py-14 sm:py-16 md:py-20 px-4 sm:px-6">
+        <div
+          className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6"
+          ref={addImgRef}
+        >
           <motion.div
-            className="relative rounded-3xl overflow-hidden h-96 md:h-[500px] lg:h-[600px]"
+            className="relative rounded-2xl sm:rounded-3xl overflow-hidden h-64 sm:h-80 md:h-[450px] lg:h-[550px]"
             initial={{ opacity: 0, y: 40, scale: 0.98 }}
             animate={addImgInView ? { opacity: 1, y: 0, scale: 1 } : {}}
-            transition={{ duration: 1, ease }}
+            transition={{ duration: 1 }}
           >
             <ParallaxImage
-              src="https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?w=1600&q=80"
+              src="https://i.postimg.cc/Gth8QqYT/6814c182171008db9057208a-vecteezy-ai-generated-data-center-background-futuristic-server-room-3643423.webp"
               alt="Infrastructure Technology"
+              className="w-full h-full"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />
+          </motion.div>
+
+          <motion.div
+            className="relative rounded-2xl sm:rounded-3xl overflow-hidden h-64 sm:h-80 md:h-[450px] lg:h-[550px]"
+            initial={{ opacity: 0, y: 40, scale: 0.98 }}
+            animate={addImgInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+            transition={{ duration: 1, delay: 0.2 }}
+          >
+            <ParallaxImage
+              src="https://i.postimg.cc/vTVjPFn1/1700929409387.jpg"
+              alt="Business Technology"
               className="w-full h-full"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent pointer-events-none" />
@@ -583,26 +644,25 @@ const ITInfrastructure = () => {
         </div>
       </section>
 
-      {/* ✦ GSAP Marquee — before CTA */}
+      {/* Marquee — before CTA */}
       <MarqueeTicker items={marqueeItems3} speed={22} />
 
-      {/* ==================== CTA — ✦ GSAP word stagger + magnetic button ==================== */}
+      {/* ==================== CTA ==================== */}
       <motion.section
         ref={ctaRef}
-        className="bg-black text-white py-20 px-6 rounded-[4rem] mx-6 my-12 overflow-hidden"
+        className="bg-black text-white py-14 sm:py-16 md:py-20 px-4 sm:px-6 rounded-[2rem] sm:rounded-[3rem] lg:rounded-[4rem] mx-3 sm:mx-6 my-8 sm:my-10 md:my-12 overflow-hidden"
         initial={{ opacity: 0, y: 60 }}
         animate={ctaInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.9, ease }}
+        transition={{ duration: 0.9 }}
       >
         <div className="max-w-4xl mx-auto text-center">
-          <div className="mb-12 overflow-hidden">
-            {/* ✦ GSAP word stagger on CTA heading */}
+          <div className="mb-8 sm:mb-10 md:mb-12 overflow-hidden">
             <h2
               ref={ctaHeadingRef}
-              className="text-7xl md:text-8xl font-semibold mb-6 leading-tight"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-semibold mb-4 sm:mb-6 leading-tight"
               aria-label="Ready to transform your IT infrastructure?"
             >
-              {["Ready", "to", <br key="br1" />, "transform", "your", <br key="br2" />, "IT", "infrastructure?"].map((word, i) =>
+              {["Ready", "to", "transform", "your",  "IT", "infrastructure?"].map((word, i) =>
                 typeof word !== "string" ? word : (
                   <span key={i} className="cta-word inline-block opacity-0 mr-[0.22em] last:mr-0">
                     {word}
@@ -614,12 +674,11 @@ const ITInfrastructure = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={ctaInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, ease, delay: 0.6 }}
+            transition={{ duration: 0.7, delay: 0.6 }}
           >
-            {/* ✦ GSAP magnetic button */}
             <MagneticCTALink
               to="/contact"
-              className="inline-flex items-center px-12 py-4 border-2 border-white rounded-full text-white font-medium text-lg hover:bg-white hover:text-black transition-colors duration-300"
+              className="inline-flex items-center px-8 sm:px-10 md:px-12 py-3 sm:py-4 border-2 border-white rounded-full text-white font-medium text-base sm:text-lg hover:bg-white hover:text-black transition-colors duration-300"
             >
               GET STARTED
             </MagneticCTALink>
@@ -632,7 +691,7 @@ const ITInfrastructure = () => {
         {showScrollTop && (
           <motion.button
             onClick={scrollToTop}
-            className="fixed bottom-8 right-8 w-14 h-14 bg-white border-2 border-gray-900 rounded-full flex items-center justify-center text-gray-900 hover:bg-gray-900 hover:text-white transition-all duration-300 z-50 shadow-lg"
+            className="fixed bottom-5 right-5 sm:bottom-8 sm:right-8 w-11 h-11 sm:w-14 sm:h-14 bg-white border-2 border-gray-900 rounded-full flex items-center justify-center text-gray-900 hover:bg-gray-900 hover:text-white transition-all duration-300 z-50 shadow-lg"
             aria-label="Scroll to top"
             initial={{ opacity: 0, scale: 0.6, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -641,7 +700,7 @@ const ITInfrastructure = () => {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
           >
-            <ArrowRight className="w-6 h-6 -rotate-90" />
+            <ArrowRight className="w-5 h-5 sm:w-6 sm:h-6 -rotate-90" />
           </motion.button>
         )}
       </AnimatePresence>

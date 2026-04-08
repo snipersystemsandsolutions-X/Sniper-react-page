@@ -1,4 +1,5 @@
 import { Layout } from "@/components/Layout";
+import LottieAnimation from "@/components/ServicesAnimation";
 import { ArrowRight, Calendar, Clock } from "lucide-react";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
@@ -18,7 +19,8 @@ const ease = [0.16, 1, 0.3, 1];
 // ---- Marquee Ticker ----
 const MarqueeTicker = ({ items, speed = 26 }: { items: string[]; speed?: number }) => {
   const trackRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
+  useEffect(() =>
+    {
     const track = trackRef.current;
     if (!track) return;
     const totalWidth = track.scrollWidth / 2;
@@ -89,15 +91,15 @@ const MagneticLink = ({
     return () => { btn.removeEventListener("mousemove", onMove); btn.removeEventListener("mouseleave", onLeave); };
   }, []);
   return (
-    <Link
+    <a
       ref={btnRef as any}
-      to={to}
+      href={to}
       className={`will-change-transform ${className ?? ""}`}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
       {children}
-    </Link>
+    </a>
   );
 };
 
@@ -115,7 +117,6 @@ const NewsletterInput = () => {
 
   return (
     <div className="relative">
-      {/* ✦ GSAP glow ring on focus */}
       <div
         ref={glowRef}
         className="absolute inset-0 rounded-full opacity-0 pointer-events-none"
@@ -217,7 +218,6 @@ const CTASection = () => {
 
   useEffect(() => { return () => { if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current); }; }, []);
 
-  // ✦ GSAP magnetic on CTA button
   useEffect(() => {
     const btn = ctaBtnRef.current;
     if (!btn) return;
@@ -258,7 +258,6 @@ const CTASection = () => {
             <h2 className="text-7xl md:text-8xl font-semibold mb-6 leading-tight text-white">Have<br />an idea?<br />We make it happen</h2>
           </motion.div>
           <motion.div initial={{ opacity: 0, y: 20 }} animate={ctaInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}>
-            {/* ✦ GSAP magnetic button */}
             <Link
               ref={ctaBtnRef as any}
               to="/"
@@ -285,7 +284,6 @@ const PostRow = ({ post, index }: { post: any; index: number }) => {
   const lineRef = useRef<HTMLDivElement>(null);
   const rowInView = useInView(rowRef, { once: true, margin: "-60px" });
 
-  // ✦ GSAP line-draw on the bottom border
   useEffect(() => {
     if (!rowInView || !lineRef.current) return;
     gsap.fromTo(lineRef.current,
@@ -302,7 +300,6 @@ const PostRow = ({ post, index }: { post: any; index: number }) => {
         animate={rowInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.05 }}
       >
-        {/* ✦ GSAP parallax image per card */}
         <div className="relative rounded-2xl overflow-hidden h-80">
           <ParallaxImage src={post.image} alt={post.title} className="w-full h-full" />
           <div className="absolute inset-0 pointer-events-none" />
@@ -321,14 +318,13 @@ const PostRow = ({ post, index }: { post: any; index: number }) => {
           <h3 className="text-2xl lg:text-3xl font-semibold text-gray-900 leading-tight">{post.title}</h3>
           <p className="text-lg text-gray-800 leading-relaxed">{post.excerpt}</p>
           <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} transition={{ type: "spring", stiffness: 300, damping: 20 }} className="inline-block">
-            <Link to={`/blog/${post.id}`} className="inline-flex items-center px-8 py-3 border-2 border-gray-900 rounded-full text-gray-900 font-medium hover:bg-gray-900 hover:text-white transition-colors duration-300">
+            <a href={`/blog/${post.id}`} className="inline-flex items-center px-8 py-3 border-2 border-gray-900 rounded-full text-gray-900 font-medium hover:bg-gray-900 hover:text-white transition-colors duration-300">
               Read more
-            </Link>
+            </a>
           </motion.div>
         </div>
       </motion.div>
 
-      {/* ✦ GSAP line-draw divider */}
       <div className="absolute bottom-0 left-0 right-0 h-px bg-gray-300 overflow-hidden last-of-type:hidden">
         <div ref={lineRef} className="h-full bg-gradient-to-r from-transparent via-gray-500 to-transparent" style={{ transform: "scaleX(0)" }} />
       </div>
@@ -366,7 +362,6 @@ const Blog = () => {
   const featuredPost = blogPosts[0];
   const regularPosts = blogPosts.slice(1);
 
-  // in-view refs
   const heroRef       = useRef(null);
   const featuredRef   = useRef(null);
   const latestRef     = useRef(null);
@@ -377,7 +372,7 @@ const Blog = () => {
   const latestInView     = useInView(latestRef,     { once: true, margin: "-60px" });
   const newsletterInView = useInView(newsletterRef, { once: true, margin: "-80px" });
 
-  // ✦ GSAP: Hero heading word-stagger (after curtain exits)
+  // ✦ GSAP: Hero heading word-stagger
   const heroHeadingRef = useRef<HTMLHeadingElement>(null);
   useEffect(() => {
     const el = heroHeadingRef.current;
@@ -389,8 +384,7 @@ const Blog = () => {
     );
   }, []);
 
-  // ✦ GSAP: Featured image parallax (managed inline via ParallaxImage component)
-  // ✦ GSAP: Category badge pop-in on featured post
+  // ✦ GSAP: Featured category badge pop-in
   const badgeRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!featuredInView || !badgeRef.current) return;
@@ -400,14 +394,7 @@ const Blog = () => {
     );
   }, [featuredInView]);
 
-  // ✦ GSAP: Latest section — staggered category labels slide in from left
-  const latestHeadRef = useRef<HTMLHeadingElement>(null);
-  useEffect(() => {
-    if (!latestInView) return;
-    // nothing extra needed — PostRow handles its own animations
-  }, [latestInView]);
-
-  const marqueeTopItems = ["Blog", "Insights", "Technology", "IT Trends", "Innovation", "Sniper Systems", "Enterprise Tech"];
+  const marqueeTopItems    = ["Blog", "Insights", "Technology", "IT Trends", "Innovation", "Sniper Systems", "Enterprise Tech"];
   const marqueeBottomItems = ["IT Infrastructure", "Managed Services", "MDM", "Cybersecurity", "AI & ML", "Networking", "Sustainability"];
 
   return (
@@ -415,35 +402,52 @@ const Blog = () => {
       {showWhiteScreen && <WhiteScreenTransition onComplete={() => setShowWhiteScreen(false)} />}
 
       {/* ==================== HERO ==================== */}
-      <section className="relative bg-white pt-32 pb-20 px-6 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-white via-white to-white opacity-60"></div>
+      <section className="relative bg-white pt-28 pb-20 px-6 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-white via-white to-white opacity-60" />
         <div className="relative z-10 max-w-7xl mx-auto">
-          <div className="text-center mb-16" ref={heroRef}>
 
-            {/* ✦ GSAP word-stagger heading */}
-            <h1
-              ref={heroHeadingRef}
-              className="text-6xl md:text-7xl font-semibold text-gray-900 mb-6 leading-tight font-sans"
-              aria-label="Blog"
-            >
-              {["Blog"].map((word, i) => (
-                <span key={i} className="blog-word inline-block opacity-0">
-                  {word}
-                </span>
-              ))}
-            </h1>
+          {/* ── Hero: heading (left) + LottieAnimation (right) ── */}
+          <div
+            className="flex flex-col lg:flex-row items-center justify-between gap-12 mb-16"
+            ref={heroRef}
+          >
+            {/* Left — heading + description */}
+            <div className="flex-1 text-center lg:text-left">
+              <h1
+                ref={heroHeadingRef}
+                className="text-6xl md:text-7xl font-semibold text-gray-900 mb-6 leading-tight font-sans"
+                aria-label="Blog"
+              >
+                {["Blog"].map((word, i) => (
+                  <span key={i} className="blog-word inline-block opacity-0">
+                    {word}
+                  </span>
+                ))}
+              </h1>
 
-            <motion.p
-              className="text-xl text-gray-700 max-w-5xl mx-auto leading-relaxed"
-              initial={{ opacity: 0, y: 30 }}
-              animate={heroInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 1.55 }}
+              <motion.p
+                className="text-xl text-gray-700 max-w-xl leading-relaxed"
+                initial={{ opacity: 0, y: 30 }}
+                animate={heroInView ? { opacity: 1, y: 0 } : {}}
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 1.55 }}
+              >
+                Discover the latest insights, news, and updates from Sniper Systems and Solutions.
+                Stay informed about technology trends, best practices, and industry developments
+                that matter to your business.
+              </motion.p>
+            </div>
+
+            {/* Right — Lottie Animation */}
+            <motion.div
+              className="flex-1 flex items-center justify-center w-full max-w-md lg:max-w-lg xl:max-w-xl"
+              initial={{ opacity: 0, x: 40 }}
+              animate={heroInView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 1.3 }}
             >
-              Discover the latest insights, news, and updates from Sniper Systems and Solutions.
-              Stay informed about technology trends, best practices, and industry developments
-              that matter to your business.
-            </motion.p>
+              <LottieAnimation />
+            </motion.div>
           </div>
+
         </div>
       </section>
 
@@ -466,7 +470,6 @@ const Blog = () => {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start pb-20 border-b border-gray-300">
 
-            {/* ✦ GSAP parallax featured image */}
             <motion.div
               className="relative rounded-2xl overflow-hidden h-96"
               initial={{ opacity: 0, x: -40 }}
@@ -474,7 +477,6 @@ const Blog = () => {
               transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
             >
               <ParallaxImage src={featuredPost.image} alt={featuredPost.title} className="w-full h-full" />
-              {/* ✦ GSAP badge pop-in */}
               <div ref={badgeRef} className="absolute top-6 left-6 z-10 opacity-0">
                 <div className="bg-black bg-opacity-70 text-white px-4 py-2 rounded-full backdrop-blur-sm">
                   <span className="text-xs font-medium uppercase tracking-wider">{featuredPost.category}</span>
@@ -495,9 +497,9 @@ const Blog = () => {
               <h3 className="text-3xl lg:text-4xl font-semibold text-gray-900 leading-tight">{featuredPost.title}</h3>
               <p className="text-lg text-gray-800 leading-relaxed">{featuredPost.excerpt}</p>
               <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }} transition={{ type: "spring", stiffness: 300, damping: 20 }} className="inline-block">
-                <Link to={`/blog/${featuredPost.id}`} className="inline-flex items-center px-8 py-3 border-2 border-gray-900 rounded-full text-gray-900 font-medium hover:bg-gray-900 hover:text-white transition-colors duration-300">
+                <a href={`/blog/${featuredPost.id}`} className="inline-flex items-center px-8 py-3 border-2 border-gray-900 rounded-full text-gray-900 font-medium hover:bg-gray-900 hover:text-white transition-colors duration-300">
                   Read article
-                </Link>
+                </a>
               </motion.div>
             </motion.div>
           </div>
@@ -507,7 +509,7 @@ const Blog = () => {
       {/* ✦ GSAP Marquee — between featured and latest */}
       <MarqueeTicker items={marqueeBottomItems} speed={30} />
 
-      {/* ==================== ALL POSTS — ✦ GSAP parallax + line-draw per row ==================== */}
+      {/* ==================== ALL POSTS ==================== */}
       <section className="bg-white py-20 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="mb-16" ref={latestRef}>
@@ -529,54 +531,8 @@ const Blog = () => {
         </div>
       </section>
 
-      {/* ==================== NEWSLETTER — ✦ GSAP input focus glow ==================== */}
-      <motion.section
-        ref={newsletterRef}
-        className="bg-black text-white py-20 px-6 rounded-[4rem] mx-6 my-12"
-        initial={{ opacity: 0, y: 60 }}
-        animate={newsletterInView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-      >
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <motion.h2
-              className="text-6xl md:text-7xl font-semibold mb-6 leading-tight"
-              initial={{ opacity: 0, y: 40 }}
-              animate={newsletterInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.15 }}
-            >
-              Stay updated
-            </motion.h2>
-            <motion.p
-              className="text-lg text-gray-200 leading-relaxed max-w-2xl mx-auto"
-              initial={{ opacity: 0, y: 20 }}
-              animate={newsletterInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.25 }}
-            >
-              Subscribe to our newsletter and never miss the latest insights,
-              technology trends, and exclusive updates from Sniper Systems.
-            </motion.p>
-          </div>
+      {/* ==================== NEWSLETTER ==================== */}
 
-          <motion.div
-            className="flex flex-col sm:flex-row gap-4 max-w-xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            animate={newsletterInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.35 }}
-          >
-            {/* ✦ GSAP glow-ring focus input */}
-            <NewsletterInput />
-            <motion.button
-              className="px-8 py-4 border-2 border-white rounded-full text-white font-medium hover:bg-white hover:text-black transition-colors duration-300 whitespace-nowrap"
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
-            >
-              Subscribe
-            </motion.button>
-          </motion.div>
-        </div>
-      </motion.section>
 
       {/* ==================== CTA ==================== */}
       <CTASection />
