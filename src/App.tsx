@@ -95,7 +95,7 @@ const App = () => (
 
           {/* Partners Routes */}
           <Route path="/partners" element={<Partners />} />
-          <Route path="/partners/apple" element={<Apple />} />
+          <Route path="/partners/apple/index.html" element={<Apple />} />
           <Route path="/partners/nvidia" element={<Nvidia />} />
           <Route path="/partners/microsoft" element={<Microsoft />} />
           <Route path="/partners/lenovo" element={<Lenovo />} />
